@@ -46,6 +46,10 @@ build/
 coverage/
 .next/
 .turbo/
+.vercel/
+*.test
+*.out
+*.tsbuildinfo
 
 # Generated Codex control-plane outputs
 .codex/evals/results/

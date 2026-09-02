@@ -1,0 +1,27 @@
+{
+  "name": "clouddesk",
+  "version": "0.0.0",
+  "private": true,
+  "description": "ClouDesk monorepo foundation",
+  "packageManager": "pnpm@10.15.1",
+  "engines": {
+    "node": ">=24.15.0 <25",
+    "pnpm": "10.15.1"
+  },
+  "scripts": {
+    "build": "pnpm --dir frontend build",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test",
+    "dev": "pnpm --dir frontend dev",
+    "format": "pnpm format:backend && pnpm --dir frontend format",
+    "format:backend": "find backend -type f -name '*.go' -exec gofmt -w {} +",
+    "format:check": "pnpm format:check:backend && pnpm --dir frontend format:check",
+    "format:check:backend": "sh scripts/check-go-format.sh",
+    "generate": "pnpm generate:backend && pnpm --dir frontend generate",
+    "generate:backend": "sh scripts/run-go-packages.sh generate",
+    "lint": "pnpm lint:backend && pnpm --dir frontend lint",
+    "lint:backend": "sh scripts/run-go-packages.sh vet",
+    "test": "pnpm test:backend && pnpm --dir frontend test",
+    "test:backend": "sh scripts/run-go-packages.sh test",
+    "typecheck": "pnpm --dir frontend typecheck"
+  }
+}
