@@ -1,0 +1,11 @@
+id: skill-system-integrity
+runner: skill-validation
+scenario: current-skills-integrity
+expected_exit: 0
+target: .codex/scripts/control_skill_validation.py
+prompt: Validate the reusable skill entrypoints and their explicit references.
+setup: The complete portable skill package is installed.
+expected:
+  - accept concise entrypoints with valid local references and handoffs
+forbidden:
+  - accept oversized entrypoints or references to unavailable skills

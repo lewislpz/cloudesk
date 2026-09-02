@@ -1,0 +1,4 @@
+interface:
+  display_name: "Security Audit"
+  short_description: "Audit and fix application security"
+  default_prompt: "Use $security-audit to audit this application end to end and produce prioritized fixes."

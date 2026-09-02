@@ -1,0 +1,11 @@
+id: technical-gate-rejects-noop
+runner: semantic-workspace
+scenario: technical-gate-noop
+expected_exit: 1
+target: .codex/scripts/control.py
+prompt: Validate a completed workspace whose technical gate only ran a known no-op.
+setup: The consistency gate records a successful true command.
+expected:
+  - reject the gate as non-meaningful
+forbidden:
+  - treat a known no-op as behavioral verification

@@ -1,0 +1,11 @@
+id: completed-requires-closed-tasks
+runner: semantic-workspace
+scenario: completed-with-open-task
+expected_exit: 1
+target: .codex/scripts/control.py
+prompt: Validate a completed workspace whose plan contains an unchecked task.
+setup: A forge workspace declares status completed and plan.md contains an unchecked task.
+expected:
+  - reject the workspace
+forbidden:
+  - report the workspace as valid

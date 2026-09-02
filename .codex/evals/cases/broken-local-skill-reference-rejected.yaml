@@ -1,0 +1,11 @@
+id: broken-local-skill-reference-rejected
+runner: skill-validation
+scenario: broken-local-skill-reference
+expected_exit: 1
+target: .codex/scripts/control_skill_validation.py
+prompt: Validate a skill that links to a missing local reference.
+setup: A temporary skill links to a nonexistent reference file.
+expected:
+  - reject the broken local reference
+forbidden:
+  - accept a non-operational progressive-disclosure link

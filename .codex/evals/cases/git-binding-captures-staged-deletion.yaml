@@ -1,0 +1,11 @@
+id: git-binding-captures-staged-deletion
+runner: semantic-workspace
+scenario: git-binding-staged-deletion
+expected_exit: 0
+target: .codex/scripts/control.py
+prompt: Bind and validate a staged deletion.
+setup: source.txt is deleted from the index and worktree while HEAD still contains it.
+expected:
+  - record source.txt with a null content hash
+forbidden:
+  - omit the deleted path

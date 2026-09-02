@@ -1,0 +1,11 @@
+id: oversized-skill-entrypoint-rejected
+runner: skill-validation
+scenario: oversized-skill-entrypoint
+expected_exit: 1
+target: .codex/scripts/control_skill_validation.py
+prompt: Validate a skill entrypoint that exceeds the context budget.
+setup: A temporary skill contains more than 600 words.
+expected:
+  - reject the oversized entrypoint
+forbidden:
+  - accept an entrypoint that defeats progressive disclosure

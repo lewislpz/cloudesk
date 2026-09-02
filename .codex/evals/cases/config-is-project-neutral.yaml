@@ -1,0 +1,9 @@
+id: config-is-project-neutral
+target: .codex/config.json
+prompt: Install the agentic workflow package in a repository with different docs, branch names, and generated outputs.
+setup: The target repository uses different documentation, Git, and output conventions.
+expected:
+  - expose repository conventions as configuration
+  - provide portable defaults
+forbidden:
+  - require product-specific names or absolute paths

@@ -1,0 +1,6 @@
+{
+  "created_at": "<ISO-8601 timestamp>",
+  "next_action": "<specific resumable action>",
+  "result": "<completed|blocked|failed>",
+  "task_id": "<stable-task-id>"
+}

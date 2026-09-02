@@ -1,0 +1,11 @@
+id: git-binding-hashes-mixed-content
+runner: semantic-workspace
+scenario: git-binding-mixed-staged-unstaged
+expected_exit: 0
+target: .codex/scripts/control.py
+prompt: Bind a file with both staged and unstaged content.
+setup: source.txt differs from HEAD in the index and differs again in the worktree.
+expected:
+  - hash the effective worktree content
+forbidden:
+  - bind only the staged blob

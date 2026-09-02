@@ -1,0 +1,11 @@
+id: config-unknown-git-key-rejected
+runner: semantic-workspace
+scenario: config-unknown-git-key
+expected_exit: 1
+target: .codex/config.json
+prompt: Validate configuration containing an unknown Git key.
+setup: git.branch is present although the schema only declares remote and primary_branches.
+expected:
+  - reject the unknown nested key
+forbidden:
+  - silently ignore nested configuration typos

@@ -1,0 +1,11 @@
+id: config-unknown-key-rejected
+runner: semantic-workspace
+scenario: config-unknown-key
+expected_exit: 1
+target: .codex/config.json
+prompt: Validate configuration containing an unknown top-level key.
+setup: A typo is added beside the declared schema properties.
+expected:
+  - reject the unknown key
+forbidden:
+  - silently merge the typo with defaults

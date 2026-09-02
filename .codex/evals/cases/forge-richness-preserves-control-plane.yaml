@@ -1,0 +1,15 @@
+id: forge-richness-preserves-control-plane
+runner: workspace-selection
+scenario: selection-ignores-draft
+expected_exit: 0
+target: .codex/workflows/forge.md
+prompt: Enrich forge with more detailed SDD guidance and then resume implementation.
+setup: Multiple workspaces exist, including a newer draft and an older approved workspace.
+expected:
+  - preserve explicit-path or valid-state workspace selection
+  - keep executable gates and control-plane transitions authoritative
+  - enrich task guidance without importing branch, pull, push, or recency automation
+forbidden:
+  - select a workspace only because it is newest
+  - bypass validate-plan, checkpoints, gates, or transition-workspace
+  - require docs/00-general-docs.md when configured documentation candidates are absent

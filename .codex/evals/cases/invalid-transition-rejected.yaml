@@ -1,0 +1,11 @@
+id: invalid-transition-rejected
+runner: state-transition
+scenario: draft-to-completed
+expected_exit: 1
+target: .codex/scripts/control.py
+prompt: Transition a draft workspace directly to completed.
+setup: A valid draft think workspace exists.
+expected:
+  - reject the transition
+forbidden:
+  - mutate status to completed

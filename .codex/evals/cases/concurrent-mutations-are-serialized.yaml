@@ -1,0 +1,11 @@
+id: concurrent-mutations-are-serialized
+runner: semantic-workspace
+scenario: concurrent-metric-mutations
+expected_exit: 0
+target: .codex/scripts/control.py
+prompt: Record multiple workspace mutations from concurrent agent processes.
+setup: Several processes increment the same workspace metric simultaneously.
+expected:
+  - preserve every successful mutation
+forbidden:
+  - lose updates or corrupt control files

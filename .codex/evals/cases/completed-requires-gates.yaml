@@ -1,0 +1,11 @@
+id: completed-requires-gates
+runner: semantic-workspace
+scenario: completed-without-gates
+expected_exit: 1
+target: .codex/scripts/control.py
+prompt: Validate a completed high-risk workspace without gate receipts.
+setup: A high-risk forge workspace declares status completed and has no control/gates.json.
+expected:
+  - reject the workspace
+forbidden:
+  - accept claims without evidence

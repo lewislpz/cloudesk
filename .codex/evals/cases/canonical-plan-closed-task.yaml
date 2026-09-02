@@ -1,0 +1,11 @@
+id: canonical-plan-closed-task
+runner: semantic-workspace
+scenario: canonical-plan-closed-task
+expected_exit: 0
+target: .codex/scripts/control.py
+prompt: Validate a completed workspace using the canonical stable-ID task format.
+setup: The task marker is closed and descriptive metadata contains checkbox-like text.
+expected:
+  - treat only the canonical task marker as completion state
+forbidden:
+  - interpret task metadata as a separate open task

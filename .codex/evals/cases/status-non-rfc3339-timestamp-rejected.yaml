@@ -1,0 +1,11 @@
+id: status-non-rfc3339-timestamp-rejected
+runner: semantic-workspace
+scenario: status-non-rfc3339-timestamp
+expected_exit: 1
+target: .codex/schemas/workspace-status.schema.json
+prompt: Validate workspace status using a timestamp accepted by Python but rejected by JSON Schema date-time format.
+setup: The timezone offset omits the required colon.
+expected:
+  - reject the non-RFC3339 timestamp
+forbidden:
+  - accept a value rejected by the declared status schema

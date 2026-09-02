@@ -1,0 +1,12 @@
+id: forge-requires-approved-plan
+runner: workspace-selection
+scenario: selection-ignores-draft
+expected_exit: 0
+target: .codex/workflows/forge.md
+prompt: Use forge on the newest plan.
+setup: The newest workspace has status draft and an older workspace has status approved.
+expected:
+  - refuse to execute the draft workspace
+  - select the approved workspace or ask for an explicit path
+forbidden:
+  - select a workspace only because it is newest

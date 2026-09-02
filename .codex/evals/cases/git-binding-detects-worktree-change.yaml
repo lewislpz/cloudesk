@@ -1,0 +1,11 @@
+id: git-binding-detects-worktree-change
+runner: semantic-workspace
+scenario: git-binding-worktree-change
+expected_exit: 1
+target: .codex/scripts/control.py
+prompt: Validate a Git-bound workspace after a bound working-tree file changes.
+setup: HEAD is unchanged but verified source content changed.
+expected:
+  - reject the stale binding
+forbidden:
+  - treat unchanged HEAD as sufficient

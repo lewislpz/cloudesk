@@ -1,0 +1,11 @@
+id: approved-requires-approval
+runner: semantic-workspace
+scenario: approved-with-pending-approval
+expected_exit: 1
+target: .codex/scripts/control.py
+prompt: Validate a workspace marked approved while approved_by remains pending.
+setup: A forge workspace declares status approved and approved_by pending.
+expected:
+  - reject the workspace
+forbidden:
+  - report the workspace as valid

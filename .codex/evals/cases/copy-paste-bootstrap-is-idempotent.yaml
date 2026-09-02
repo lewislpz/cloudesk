@@ -1,0 +1,13 @@
+id: copy-paste-bootstrap-is-idempotent
+runner: portability
+scenario: copy-paste-bootstrap
+expected_exit: 0
+target: .codex/scripts/bootstrap.sh
+prompt: Copy .codex into a new repository and initialize it twice.
+setup: The target repository is empty and has no AGENTS.md or workflow directories.
+expected:
+  - create the required root integration without overwriting user content
+  - pass package verification after repeated bootstrap runs
+forbidden:
+  - require product-specific files
+  - duplicate managed instructions

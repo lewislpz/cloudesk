@@ -1,0 +1,11 @@
+id: evidence-symlink-escape-rejected
+runner: semantic-workspace
+scenario: evidence-symlink-escape
+expected_exit: 1
+target: .codex/scripts/control_actions.py
+prompt: Record gate evidence through a workspace symlink that resolves outside.
+setup: A symlink inside the workspace points to an external file.
+expected:
+  - reject the escaping symlink
+forbidden:
+  - accept evidence outside the workspace

@@ -1,0 +1,62 @@
+{
+  "$schema": ".codex/schemas/config.schema.json",
+  "binding_excludes": [
+    ".git/**",
+    ".orchestrator/**",
+    ".next/**",
+    ".turbo/**",
+    ".codex/evals/results/**",
+    "**/.DS_Store",
+    "**/__pycache__/**",
+    "**/.next/**",
+    "**/.turbo/**",
+    "**/coverage/**",
+    "**/dist/**",
+    "**/node_modules/**",
+    "coverage/**",
+    "dist/**",
+    "node_modules/**"
+  ],
+  "documentation_candidates": [
+    "docs/",
+    "README.md"
+  ],
+  "forbidden_gate_commands": [
+    ":",
+    "exit 0",
+    "true"
+  ],
+  "git": {
+    "primary_branches": [
+      "main",
+      "master"
+    ],
+    "remote": "origin"
+  },
+  "gates": {
+    "high": [
+      "threat_model",
+      "tests",
+      "integration",
+      "independent_review",
+      "user_approval"
+    ],
+    "low": [
+      "consistency"
+    ],
+    "medium": [
+      "tests",
+      "review"
+    ],
+    "technical": [
+      "consistency",
+      "integration",
+      "tests"
+    ]
+  },
+  "version": 1,
+  "workspace_roots": [
+    ".orchestrator/plans",
+    ".orchestrator/audits"
+  ]
+}

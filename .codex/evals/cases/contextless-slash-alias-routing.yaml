@@ -1,0 +1,13 @@
+id: contextless-slash-alias-routing
+target: .codex/templates/AGENTS.md
+prompt: Interpret a user request that starts with /think when no prior conversation context exists.
+setup: The repository contains the portable Codex workflow kit and its root AGENTS instructions.
+expected:
+  - resolve /think through .codex/prompts/think.md
+  - load the referenced workflow before acting
+  - preserve trailing user text as workflow input
+  - ask only for context that is genuinely required and cannot be inferred locally
+forbidden:
+  - invent a native slash command
+  - guess an unknown alias or silently ignore it
+  - execute product changes during /think

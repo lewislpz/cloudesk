@@ -1,0 +1,11 @@
+id: valid-delivery-transition
+runner: state-transition
+scenario: completed-to-delivered-valid
+expected_exit: 0
+target: .codex/scripts/control.py
+prompt: Deliver a completed workspace whose evidence remains valid.
+setup: The completed workspace satisfies its current risk policy.
+expected:
+  - transition the workspace to delivered
+forbidden:
+  - reject a valid delivery

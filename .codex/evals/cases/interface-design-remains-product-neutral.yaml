@@ -1,0 +1,10 @@
+id: interface-design-remains-product-neutral
+target: .codex/skills/interface-design/SKILL.md
+prompt: Design an interface for a repository without an established visual system.
+setup: The generic interface-design skill is available.
+expected:
+  - derive visual direction from repository evidence or explicit user requirements
+  - cover responsive behavior, accessibility, and interaction states
+forbidden:
+  - assume a specific product, brand, framework, or design-generation service
+  - apply visual preferences from another project

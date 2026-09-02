@@ -1,0 +1,11 @@
+id: delivery-revalidates-workspace
+runner: state-transition
+scenario: completed-to-delivered-invalid
+expected_exit: 1
+target: .codex/scripts/control.py
+prompt: Deliver a completed workspace after its evidence becomes stale.
+setup: The workspace was completed but no longer validates.
+expected:
+  - reject the delivered transition
+forbidden:
+  - deliver stale or invalid work

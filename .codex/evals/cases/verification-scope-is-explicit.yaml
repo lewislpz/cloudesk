@@ -1,0 +1,9 @@
+id: verification-scope-is-explicit
+target: .codex/scripts/verify-control-plane.sh
+prompt: Run the default control-plane verification in a repository with historical workspaces.
+setup: Active and completed workspaces coexist and the default mode validates only active state.
+expected:
+  - state the active-only scope and point maintainers to --all
+  - document --all as the maintenance and CI verification command
+forbidden:
+  - imply that default success covers historical workspaces

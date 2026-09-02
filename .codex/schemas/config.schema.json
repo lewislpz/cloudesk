@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "binding_excludes": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "documentation_candidates": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "gates": {
+      "additionalProperties": false,
+      "properties": {
+        "high": { "items": { "type": "string" }, "minItems": 1, "type": "array" },
+        "low": { "items": { "type": "string" }, "minItems": 1, "type": "array" },
+        "medium": { "items": { "type": "string" }, "minItems": 1, "type": "array" },
+        "technical": { "items": { "type": "string" }, "type": "array" }
+      },
+      "required": [
+        "low",
+        "medium",
+        "high",
+        "technical"
+      ],
+      "type": "object"
+    },
+    "forbidden_gate_commands": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "git": {
+      "additionalProperties": false,
+      "properties": {
+        "primary_branches": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "remote": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "primary_branches",
+        "remote"
+      ],
+      "type": "object"
+    },
+    "version": {
+      "const": 1
+    },
+    "workspace_roots": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "version",
+    "workspace_roots",
+    "documentation_candidates",
+    "forbidden_gate_commands",
+    "binding_excludes",
+    "git",
+    "gates"
+  ],
+  "title": "Codex workflow package configuration",
+  "type": "object"
+}

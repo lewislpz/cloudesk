@@ -1,0 +1,11 @@
+id: config-invalid-nested-type-rejected
+runner: semantic-workspace
+scenario: config-invalid-nested-type
+expected_exit: 1
+target: .codex/config.json
+prompt: Validate configuration with a wrong nested value type.
+setup: gates.low is a string instead of an array of strings.
+expected:
+  - reject the invalid nested type
+forbidden:
+  - accept a value rejected by the schema

@@ -1,0 +1,11 @@
+id: manual-gate-requires-evidence
+runner: semantic-workspace
+scenario: manual-gate-without-evidence
+expected_exit: 1
+target: .codex/scripts/control.py
+prompt: Record a manual review gate without evidence.
+setup: A medium-risk workspace exists without a review artifact.
+expected:
+  - reject the gate receipt
+forbidden:
+  - mark an unsupported manual claim as passed

@@ -1,0 +1,11 @@
+id: canonical-plan-open-task
+runner: semantic-workspace
+scenario: canonical-plan-open-task
+expected_exit: 1
+target: .codex/scripts/control.py
+prompt: Validate a completed workspace with an open canonical task.
+setup: The stable-ID task marker remains unchecked.
+expected:
+  - reject completion because task-1 is open
+forbidden:
+  - ignore the canonical task marker

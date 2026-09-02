@@ -1,0 +1,11 @@
+id: git-binding-captures-staged-rename
+runner: semantic-workspace
+scenario: git-binding-staged-rename
+expected_exit: 0
+target: .codex/scripts/control.py
+prompt: Bind a staged rename.
+setup: source.txt is staged as renamed.txt while HEAD still contains the old path.
+expected:
+  - record both the deleted source path and the added destination path
+forbidden:
+  - collapse the rename and lose one side of the change set

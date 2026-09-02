@@ -1,0 +1,11 @@
+id: git-binding-rejects-staged-out-of-scope
+runner: semantic-workspace
+scenario: git-binding-staged-out-of-scope
+expected_exit: 1
+target: .codex/scripts/control.py
+prompt: Validate a binding with a staged change outside its allowed paths.
+setup: source.txt is staged but the binding only permits other paths.
+expected:
+  - reject the out-of-scope staged path
+forbidden:
+  - let staging hide the scope violation

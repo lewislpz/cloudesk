@@ -1,0 +1,11 @@
+id: manual-gate-persists
+runner: cli
+scenario: manual-gate-persists
+expected_exit: 0
+target: .codex/scripts/control.py
+prompt: Record a manual review gate through the CLI.
+setup: A medium-risk workspace exists with review evidence.
+expected:
+  - persist the review receipt
+forbidden:
+  - silently return without recording the gate

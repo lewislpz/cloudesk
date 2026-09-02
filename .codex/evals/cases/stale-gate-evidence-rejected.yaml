@@ -1,0 +1,11 @@
+id: stale-gate-evidence-rejected
+runner: semantic-workspace
+scenario: stale-gate-evidence
+expected_exit: 1
+target: .codex/scripts/control.py
+prompt: Validate a completed workspace whose gate evidence changed after receipt creation.
+setup: The evidence hash no longer matches the file.
+expected:
+  - reject the workspace
+forbidden:
+  - accept stale evidence

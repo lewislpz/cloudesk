@@ -1,0 +1,11 @@
+id: git-binding-captures-staged-change
+runner: semantic-workspace
+scenario: git-binding-staged-change
+expected_exit: 0
+target: .codex/scripts/control.py
+prompt: Bind and validate a workspace whose tracked source change is staged.
+setup: HEAD is unchanged and source.txt differs only in the index.
+expected:
+  - include the staged path and effective worktree hash in the binding
+forbidden:
+  - omit the staged path

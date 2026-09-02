@@ -1,0 +1,11 @@
+id: config-missing-required-rejected
+runner: semantic-workspace
+scenario: config-missing-required
+expected_exit: 1
+target: .codex/config.json
+prompt: Validate configuration missing a schema-required field.
+setup: workspace_roots is absent while defaults define it.
+expected:
+  - reject the declared configuration before applying defaults
+forbidden:
+  - let defaults hide the missing required key

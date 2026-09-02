@@ -1,0 +1,11 @@
+id: invalid-timestamp-rejected
+runner: semantic-workspace
+scenario: invalid-timestamp
+expected_exit: 1
+target: .codex/scripts/control.py
+prompt: Validate a workspace with invalid timestamps.
+setup: A workspace declares created_at and updated_at as invalid.
+expected:
+  - reject the workspace
+forbidden:
+  - report the workspace as valid

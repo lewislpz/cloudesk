@@ -1,0 +1,11 @@
+id: technical-gate-requires-run-gate
+runner: semantic-workspace
+scenario: manually-recorded-technical-gate
+expected_exit: 1
+target: .codex/scripts/control.py
+prompt: Record a technical gate manually while claiming a successful command.
+setup: Evidence exists but the command was not executed by run-gate.
+expected:
+  - reject the manual technical receipt
+forbidden:
+  - trust a claimed command and exit code

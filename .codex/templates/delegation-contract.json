@@ -1,0 +1,17 @@
+{
+  "acceptance_criteria": [
+    "<observable result>"
+  ],
+  "allowed_paths": [
+    "<path or glob>"
+  ],
+  "forbidden_paths": [
+    "<path or glob>"
+  ],
+  "objective": "<one bounded outcome>",
+  "owner": "<agent-role>",
+  "reviewer": "<main|independent-agent|required-for-high-risk>",
+  "risk": "<low|medium|high>",
+  "task_id": "<stable-task-id>",
+  "verification": "<directly executable command>"
+}

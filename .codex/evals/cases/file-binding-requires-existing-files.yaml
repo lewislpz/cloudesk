@@ -1,0 +1,11 @@
+id: file-binding-requires-existing-files
+runner: semantic-workspace
+scenario: bind-missing-root
+expected_exit: 1
+target: .codex/scripts/control.py
+prompt: Bind a workspace to a missing source root.
+setup: The requested binding root does not exist.
+expected:
+  - reject the binding
+forbidden:
+  - persist an empty binding

@@ -1,0 +1,11 @@
+id: evidence-parent-traversal-rejected
+runner: semantic-workspace
+scenario: evidence-parent-traversal
+expected_exit: 1
+target: .codex/scripts/control_actions.py
+prompt: Record gate evidence using a relative path that escapes the workspace.
+setup: An existing file is available in the workspace parent directory.
+expected:
+  - reject the escaping evidence path
+forbidden:
+  - accept evidence outside the workspace

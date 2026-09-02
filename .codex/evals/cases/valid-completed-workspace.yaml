@@ -1,0 +1,11 @@
+id: valid-completed-workspace
+runner: semantic-workspace
+scenario: valid-completed-workspace
+expected_exit: 0
+target: .codex/scripts/control.py
+prompt: Validate a correctly completed low-risk workspace.
+setup: All tasks are closed and the required technical gate has fresh command evidence.
+expected:
+  - accept the workspace
+forbidden:
+  - reject a valid workspace

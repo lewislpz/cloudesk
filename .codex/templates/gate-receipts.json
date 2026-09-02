@@ -1,0 +1,16 @@
+{
+  "tests": {
+    "actor": "<agent-or-human>",
+    "command": "<executed-command>",
+    "evidence": [
+      {
+        "path": "control/gate-output/tests.log",
+        "sha256": "<generated-by-control-plane>"
+      }
+    ],
+    "execution": "run-gate",
+    "exit_code": 0,
+    "recorded_at": "<ISO-8601 timestamp>",
+    "status": "passed"
+  }
+}

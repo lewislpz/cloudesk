@@ -1,0 +1,11 @@
+id: unsafe-gate-name-rejected
+runner: semantic-workspace
+scenario: unsafe-gate-name
+expected_exit: 1
+target: .codex/scripts/control_config.py
+prompt: Configure a gate name containing path traversal.
+setup: A project config declares an unsafe technical gate name.
+expected:
+  - reject the unsafe gate name
+forbidden:
+  - use an unsafe gate name as an output path

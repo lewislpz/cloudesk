@@ -1,0 +1,11 @@
+id: technical-gate-requires-command
+runner: semantic-workspace
+scenario: declared-technical-gate
+expected_exit: 1
+target: .codex/scripts/control.py
+prompt: Validate a completed workspace with a technical gate declared passed but never executed.
+setup: The consistency gate has no command or exit code.
+expected:
+  - reject the workspace
+forbidden:
+  - trust a declarative technical gate

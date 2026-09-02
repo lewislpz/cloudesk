@@ -1,0 +1,11 @@
+id: medium-completion-requires-binding
+runner: semantic-workspace
+scenario: medium-completion-without-binding
+expected_exit: 1
+target: .codex/scripts/control.py
+prompt: Validate medium-risk completed work without Git or file binding.
+setup: Gates pass but no verified source snapshot exists.
+expected:
+  - reject the workspace
+forbidden:
+  - accept unbound completion evidence
