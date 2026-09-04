@@ -1,8 +1,8 @@
-# Proposed OpenAPI And TypeScript Generation Workflow
+# OpenAPI And TypeScript Generation Workflow
 
 ## Purpose And Source Of Truth
 
-OpenAPI 3.1 is the proposed executable contract between the Go API and the Next.js TypeScript application. The canonical authored entrypoint will be:
+OpenAPI 3.1 is the executable contract between the Go API and the Next.js TypeScript application. The canonical authored entrypoint is:
 
 ```text
 backend/api/openapi.yaml
@@ -10,7 +10,16 @@ backend/api/openapi.yaml
 
 It is the source of truth for paths, parameters, security requirements, request/response schemas, error codes, examples, and operation IDs. Generated Go and TypeScript code is derived output and is never edited manually. Markdown explains intent and trade-offs; when it conflicts with the validated specification, the inconsistency must be fixed rather than allowing two contracts.
 
-The initial single file may later be split into referenced path/component files when reviewability demands it. CI bundles and validates one canonical artifact so external consumers never depend on repository layout.
+M0 Task 2 implements the initial compatibility fixture: public liveness/readiness,
+the shared error and request-correlation shapes, opaque cookie security, and
+`GET /api/v1/organizations/{organizationId}` as a future M1 tenant-route contract.
+The organization operation is generated but has no handler or product behavior yet.
+
+The current single-file contract accepts document-local JSON Pointer references only.
+The repository checks this before any general-purpose OpenAPI resolver runs, preventing
+unexpected file or network reads from authored `$ref` values. The source may later be
+split when reviewability demands it, but that change must introduce an explicit,
+allowlisted bundling boundary; external consumers still receive one canonical artifact.
 
 ## Contract Rules
 
@@ -31,7 +40,7 @@ Reusable components include UUIDs, RFC 3339 timestamps, date-only fields, decima
 
 The API describes the browser's opaque cookie session through an OpenAPI `apiKey` security scheme in `cookie`, and documents the session-bound CSRF header on unsafe methods. Cognito OIDC exchange, refresh, and provider tokens stay behind the Go identity/session boundary. A future service/tool bearer scheme must use explicitly selected operations and cannot be accepted ambiguously alongside a browser session. Environment-specific issuer/discovery URLs remain deployment configuration, not hardcoded production values in source.
 
-## Proposed Generated Artifacts
+## Generated Artifacts
 
 ```text
 backend/
@@ -42,11 +51,24 @@ frontend/
 └── src/lib/api/generated/                # generated TypeScript types and fetch client
 ```
 
-The selected proposal is `ogen` for strict Go server types/interfaces and `@hey-api/openapi-ts` for a browser-compatible TypeScript fetch client. Exact versions are pinned in M0 only after a compatibility fixture proves they support the 3.1 features, error unions, nullable/optional semantics, headers, and security scheme used by ClouDesk. If that fixture fails, the tool decision is reopened explicitly with an ADR and consumer-impact evidence; the gate is not permission to downgrade the contract or silently ignore unsupported schema keywords.
+The implemented toolchain pins `ogen` 1.24.0 for strict Go server types/interfaces,
+`@hey-api/openapi-ts` 0.99.0 for the generated TypeScript fetch client, Redocly CLI
+2.51.0 for linting, and `oasdiff` 1.28.0 for semantic compatibility. The fixture
+proves the OpenAPI 3.1 features, error unions, optional fields, headers, UUID/date-time
+formats, and security scheme currently used by ClouDesk. A failed compatibility
+fixture reopens the tool decision explicitly with an ADR and consumer-impact
+evidence; it is not permission to downgrade the contract or silently ignore
+unsupported schema keywords.
 
 Generated Go interfaces terminate at transport adapters. Hand-written handlers translate generated request types to application commands and map typed results/errors back to generated response variants. Generation does not create domain services, repositories, SQL, or authorization.
 
-The TypeScript output supplies request/response types and a typed transport. Feature-owned TanStack Query hooks and query-key factories remain hand-written around that client so cache keys always include `organizationId` and UI invalidation follows domain behavior. Frontend code does not duplicate API DTOs with hand-written lookalikes.
+The TypeScript output supplies request/response types and a typed transport. Client
+authentication generation is disabled deliberately: browser JavaScript cannot and
+must not read the HttpOnly session cookie; the hand-written runtime added in Task 4
+will use same-origin credentials and attach CSRF only to unsafe methods. Feature-owned
+TanStack Query hooks and query-key factories remain hand-written around that client
+so cache keys always include `organizationId` and UI invalidation follows domain
+behavior. Frontend code does not duplicate API DTOs with hand-written lookalikes.
 
 Generated artifacts are committed for reviewable cross-stack changes and reproducible consumer builds. CI regenerates them from a clean checkout and fails on any diff. Tool versions and generation flags are pinned in repository manifests or immutable build images.
 
@@ -82,11 +104,19 @@ The generated client accepts an injected fetch implementation/interceptor chain 
 
 The generated directory contains no application state, token storage, notifications, or React components.
 
-## CI Contract Pipeline
+## Contract Commands And Future CI Pipeline
 
-The future M0 pipeline runs the following conceptual gates with pinned tools:
+The repository now exposes `pnpm generate:openapi`, `pnpm lint:openapi`, and
+`pnpm check:generated`. Linting combines the OpenAPI ruleset, ClouDesk-specific
+tenant/security/correlation assertions, schema validation with external references
+disabled, and a breaking-change comparison against `OPENAPI_BASE_REF` (defaulting to
+`origin/main`) when that ref contains a contract. Task 8 will invoke the same commands
+in pull-request CI.
 
-1. parse and lint the OpenAPI 3.1 document, resolve all references, and validate examples;
+The complete M0 pipeline runs the following conceptual gates with pinned tools:
+
+1. reject non-document references, then parse and lint the OpenAPI 3.1 document,
+   resolve its internal references, and validate examples;
 2. enforce local rules: tenant route shape, stable `operationId`, shared error responses, security declarations, bounded pagination, idempotency, and preconditions;
 3. generate Go and TypeScript artifacts from a clean tree;
 4. format generated artifacts and fail if the working tree differs;

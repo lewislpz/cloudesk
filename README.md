@@ -25,7 +25,9 @@ The exact pnpm version is also recorded in `package.json`. Package versions are
 locked in `pnpm-lock.yaml`; do not install with an unfrozen lockfile in CI.
 ESLint remains pinned to the latest compatible 9.x release because Next.js's current
 transitive plugins do not yet accept ESLint 10; strict peer checks keep that temporary
-constraint visible.
+constraint visible. The workspace also overrides transitive `js-yaml` to 4.3.2 so
+OpenAPI tooling stays above the patched thresholds for the recorded quadratic-CPU
+advisories; remove the override only after the generator dependency graph is verified.
 
 ## Bootstrap
 
@@ -48,18 +50,20 @@ Run these commands from the repository root:
 | `pnpm lint` | Run Go vet and frontend ESLint. |
 | `pnpm typecheck` | Type-check the frontend. |
 | `pnpm test` | Run backend and frontend unit tests. |
-| `pnpm generate` | Run registered Go and frontend generators. |
+| `pnpm generate` | Regenerate OpenAPI clients plus registered Go and frontend outputs. |
+| `pnpm generate:openapi` | Generate strict Go interfaces and the TypeScript fetch client. |
+| `pnpm lint:openapi` | Lint the API contract and reject incompatible changes when a baseline exists. |
+| `pnpm check:generated` | Regenerate and fail if either generated tree changes. |
 | `pnpm check` | Run every non-mutating foundation check. |
 
 The commands intentionally have stable names before product code exists. Later M0
-tasks extend them with OpenAPI generation, integration tests, migrations, and
-documentation checks.
+tasks extend them with integration tests, migrations, and documentation checks.
 
 ## Current Structure
 
 ```text
-backend/       Go module; runnable processes arrive in a later M0 task
-frontend/      Next.js/React workspace; the application shell arrives later
+backend/       Go module and generated OpenAPI boundary; runnable processes arrive later
+frontend/      Next.js/React workspace and generated API client; the app shell arrives later
 docs/          Proposed product and engineering architecture
 scripts/       Small repository-level verification helpers
 ```

@@ -10,18 +10,25 @@
   },
   "scripts": {
     "build": "pnpm --dir frontend build",
-    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm check:generated",
+    "check:generated": "sh scripts/check-generated.sh",
     "dev": "pnpm --dir frontend dev",
     "format": "pnpm format:backend && pnpm --dir frontend format",
     "format:backend": "find backend -type f -name '*.go' -exec gofmt -w {} +",
     "format:check": "pnpm format:check:backend && pnpm --dir frontend format:check",
     "format:check:backend": "sh scripts/check-go-format.sh",
-    "generate": "pnpm generate:backend && pnpm --dir frontend generate",
+    "generate": "pnpm generate:openapi && pnpm generate:backend && pnpm --dir frontend generate",
     "generate:backend": "sh scripts/run-go-packages.sh generate",
-    "lint": "pnpm lint:backend && pnpm --dir frontend lint",
+    "generate:openapi": "sh scripts/generate-openapi.sh",
+    "lint": "pnpm lint:openapi && pnpm lint:backend && pnpm --dir frontend lint",
     "lint:backend": "sh scripts/run-go-packages.sh vet",
+    "lint:openapi": "node scripts/check-openapi-contract.mjs && redocly lint clouddesk@v1 && sh scripts/check-openapi-compatibility.sh",
     "test": "pnpm test:backend && pnpm --dir frontend test",
     "test:backend": "sh scripts/run-go-packages.sh test",
     "typecheck": "pnpm --dir frontend typecheck"
+  },
+  "devDependencies": {
+    "@redocly/cli": "2.51.0",
+    "yaml": "2.9.0"
   }
 }

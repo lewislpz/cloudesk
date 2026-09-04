@@ -1,0 +1,385 @@
+openapi: 3.1.0
+info:
+  title: ClouDesk API
+  version: 1.0.0
+  summary: Contract for the ClouDesk browser API.
+  description: >-
+    Canonical contract shared by the Go HTTP boundary and the generated TypeScript
+    client. The initial M0 surface proves health, errors, request correlation, opaque
+    cookie authentication, and explicit tenant routing; it does not claim that the
+    later organization operation is implemented yet.
+tags:
+  - name: Health
+    description: Process liveness and readiness probes.
+  - name: Organizations
+    description: Tenant context selected explicitly by organization ID.
+servers:
+  - url: /
+    description: Same-origin API boundary.
+paths:
+  /health/live:
+    get:
+      operationId: getLiveness
+      summary: Check process liveness
+      description: >-
+        Reports whether the process event loop is alive. This probe is public and
+        does not depend on PostgreSQL, Redis, queues, or object storage.
+      tags:
+        - Health
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+      responses:
+        '200':
+          description: The process is alive.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+              examples:
+                alive:
+                  value:
+                    status: ok
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /health/ready:
+    get:
+      operationId: getReadiness
+      summary: Check process readiness
+      description: >-
+        Reports whether the process can accept useful work. Required dependency or
+        internal saturation failures remove the process from service.
+      tags:
+        - Health
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+      responses:
+        '200':
+          description: The process is ready to accept work.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+              examples:
+                ready:
+                  value:
+                    status: ok
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /api/v1/organizations/{organizationId}:
+    parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+    get:
+      operationId: getOrganization
+      summary: Read an organization
+      description: >-
+        Returns the organization visible to the authenticated member. A principal
+        without active membership receives the same concealed not-found behavior as
+        an unknown organization. This M1 operation is present in M0 only as a
+        generator compatibility fixture.
+      tags:
+        - Organizations
+      security:
+        - cookieSession: []
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+      responses:
+        '200':
+          description: Organization visible to the current member.
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+              examples:
+                activeOrganization:
+                  value:
+                    id: 2e4cf420-792d-4c89-a768-0d68e9235a7e
+                    name: Northstar Studio
+                    status: ACTIVE
+                    createdAt: '2026-09-03T08:00:00Z'
+                    updatedAt: '2026-09-03T08:00:00Z'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AuthenticationRequired'
+        '403':
+          $ref: '#/components/responses/PermissionDenied'
+        '404':
+          $ref: '#/components/responses/OrganizationNotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  securitySchemes:
+    cookieSession:
+      type: apiKey
+      in: cookie
+      name: __Host-cloudesk_session
+      description: >-
+        Opaque, Secure, HttpOnly, same-origin application session. Identity-provider
+        tokens are never exposed to browser JavaScript.
+  parameters:
+    OrganizationId:
+      name: organizationId
+      in: path
+      required: true
+      description: Organization that establishes the tenant scope for this request.
+      schema:
+        $ref: '#/components/schemas/UUID'
+    RequestId:
+      name: X-Request-ID
+      in: header
+      required: false
+      description: >-
+        Optional caller correlation value. The server validates or replaces it and
+        returns the effective value in every response.
+      schema:
+        $ref: '#/components/schemas/RequestId'
+  headers:
+    ETag:
+      description: Quoted opaque representation version; clients must not parse it.
+      required: true
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 130
+        pattern: '^"[^"\r\n]+"$'
+        examples:
+          - '"organization-7"'
+    RequestId:
+      description: Effective server-selected request correlation value.
+      required: true
+      schema:
+        $ref: '#/components/schemas/RequestId'
+  responses:
+    BadRequest:
+      description: A path, query, header, or body value is malformed or invalid.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+          examples:
+            validationFailed:
+              value:
+                error:
+                  code: VALIDATION_FAILED
+                  message: The request contains invalid fields.
+                  requestId: 01K4A2Q8H6S6N9B6NMJ4F3X8ZT
+                  details:
+                    - pointer: /path/organizationId
+                      code: INVALID_UUID
+                      message: Organization ID must be a valid UUID.
+    AuthenticationRequired:
+      description: A valid application session is required.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+          examples:
+            authenticationRequired:
+              value:
+                error:
+                  code: AUTHENTICATION_REQUIRED
+                  message: Authentication is required.
+                  requestId: 01K4A2Q8H6S6N9B6NMJ4F3X8ZT
+    PermissionDenied:
+      description: The authenticated tenant member lacks the required permission.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+          examples:
+            permissionDenied:
+              value:
+                error:
+                  code: PERMISSION_DENIED
+                  message: You do not have permission to perform this action.
+                  requestId: 01K4A2Q8H6S6N9B6NMJ4F3X8ZT
+    OrganizationNotFound:
+      description: The organization is absent or concealed from this principal.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+          examples:
+            organizationNotFound:
+              value:
+                error:
+                  code: ORGANIZATION_NOT_FOUND
+                  message: Organization not found.
+                  requestId: 01K4A2Q8H6S6N9B6NMJ4F3X8ZT
+    InternalError:
+      description: An unexpected server fault occurred.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+          examples:
+            internalError:
+              value:
+                error:
+                  code: INTERNAL_ERROR
+                  message: An unexpected error occurred.
+                  requestId: 01K4A2Q8H6S6N9B6NMJ4F3X8ZT
+    ServiceUnavailable:
+      description: A required dependency or capacity condition prevents useful work.
+      headers:
+        Retry-After:
+          description: Minimum number of seconds before a bounded retry.
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 300
+          examples:
+            retryInFiveSeconds:
+              value: 5
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+          examples:
+            dependencyUnavailable:
+              value:
+                error:
+                  code: DEPENDENCY_UNAVAILABLE
+                  message: The service is temporarily unavailable.
+                  requestId: 01K4A2Q8H6S6N9B6NMJ4F3X8ZT
+  schemas:
+    UUID:
+      type: string
+      format: uuid
+      description: Opaque public resource identifier.
+      examples:
+        - 2e4cf420-792d-4c89-a768-0d68e9235a7e
+    RequestId:
+      type: string
+      minLength: 1
+      maxLength: 128
+      pattern: '^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$'
+      description: Validated request correlation identifier.
+      examples:
+        - 01K4A2Q8H6S6N9B6NMJ4F3X8ZT
+    HealthStatus:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - ok
+    Organization:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        name:
+          type: string
+          minLength: 1
+          maxLength: 160
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - SUSPENDED
+        createdAt:
+          $ref: '#/components/schemas/Timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/Timestamp'
+    Timestamp:
+      type: string
+      format: date-time
+      description: RFC 3339 timestamp normalized to UTC by the API.
+      examples:
+        - '2026-09-03T08:00:00Z'
+    ErrorEnvelope:
+      type: object
+      additionalProperties: false
+      required:
+        - error
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      additionalProperties: false
+      required:
+        - code
+        - message
+        - requestId
+      properties:
+        code:
+          type: string
+          minLength: 1
+          maxLength: 96
+          pattern: '^[A-Z][A-Z0-9_]*$'
+        message:
+          type: string
+          minLength: 1
+          maxLength: 512
+        requestId:
+          $ref: '#/components/schemas/RequestId'
+        details:
+          type: array
+          maxItems: 20
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      type: object
+      additionalProperties: false
+      required:
+        - code
+        - message
+        - pointer
+      properties:
+        pointer:
+          type: string
+          minLength: 1
+          maxLength: 256
+          description: JSON Pointer or documented request-location pointer.
+        code:
+          type: string
+          minLength: 1
+          maxLength: 96
+          pattern: '^[A-Z][A-Z0-9_]*$'
+        message:
+          type: string
+          minLength: 1
+          maxLength: 512

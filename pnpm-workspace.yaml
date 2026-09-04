@@ -1,5 +1,8 @@
 packages:
   - frontend
 
+overrides:
+  js-yaml: 4.3.2
+
 ignoredBuiltDependencies:
   - unrs-resolver

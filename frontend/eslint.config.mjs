@@ -10,5 +10,10 @@ export default defineConfig([
       "@next/next/no-html-link-for-pages": "off",
     },
   },
-  globalIgnores([".next/**", "coverage/**", "next-env.d.ts"]),
+  globalIgnores([
+    ".next/**",
+    "coverage/**",
+    "next-env.d.ts",
+    "src/lib/api/generated/**",
+  ]),
 ]);

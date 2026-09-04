@@ -1,0 +1,12 @@
+id: failed-technical-gate-recorded-failed
+runner: semantic-workspace
+scenario: failed-technical-gate-receipt
+expected_exit: 0
+target: .codex/scripts/control.py
+prompt: Execute a technical gate whose command exits unsuccessfully.
+setup: A low-risk in-progress workspace exists and the gate command exits with code 7.
+expected:
+  - preserve the non-zero exit code
+  - record the gate status as failed
+forbidden:
+  - label an unsuccessful technical gate as passed

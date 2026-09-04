@@ -5,7 +5,7 @@ import os
 import subprocess
 from pathlib import Path
 
-from control_actions import record_gate, transition_workspace
+from control_actions import record_gate, run_gate, transition_workspace
 from control_bindings import bind_files
 from control_eval_fixtures import write_workspace
 from control_eval_git import run_git_scenario
@@ -127,6 +127,25 @@ def run_hardening_scenario(scenario: str, root: Path) -> int | None:
         except ControlError:
             return 1
         return 0
+    if scenario == "failed-technical-gate-receipt":
+        workspace = write_workspace(root, state="in_progress")
+        exit_code = run_gate(
+            workspace,
+            "consistency",
+            "main",
+            ["python3", "-c", "raise SystemExit(7)"],
+            root,
+        )
+        receipt = read_json(workspace / "control" / "gates.json", {}).get(
+            "consistency", {}
+        )
+        return (
+            0
+            if exit_code == 7
+            and receipt.get("exit_code") == 7
+            and receipt.get("status") == "failed"
+            else 1
+        )
     if scenario == "concurrent-metric-mutations":
         workspace = write_workspace(root, state="in_progress")
         control_path = Path(__file__).with_name("control.py")

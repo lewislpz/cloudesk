@@ -12,6 +12,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "generate": "next typegen",
+    "generate:openapi": "openapi-ts",
     "lint": "eslint .",
     "start": "next start",
     "test": "vitest run --passWithNoTests",
@@ -24,6 +25,7 @@
     "react-dom": "19.2.8"
   },
   "devDependencies": {
+    "@hey-api/openapi-ts": "0.99.0",
     "@tailwindcss/postcss": "4.3.3",
     "@types/node": "26.4.1",
     "@types/react": "19.2.18",

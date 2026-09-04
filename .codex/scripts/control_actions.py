@@ -99,7 +99,9 @@ def record_gate(
             "execution": "run-gate" if executed else "manual",
             "exit_code": exit_code,
             "recorded_at": now_iso(),
-            "status": "passed",
+            "status": (
+                "failed" if executed and exit_code != 0 else "passed"
+            ),
         }
         write_json(gates_path, gates)
 

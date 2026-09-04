@@ -19,17 +19,18 @@ documentation, application artifacts, or Git repository. That historical observa
 explains why the architecture was treated as greenfield rather than inferred from
 code.
 
-The repository is now initialized on Git. M0 Task 1 has added the root contributor
-README, exact Go/Node/pnpm toolchain declarations, the Go and frontend package
-manifests, a frozen pnpm lockfile, strict frontend quality configuration, stable root
-commands, and an empty-secret `.env.example`. This is engineering foundation, not a
-product feature or deployed runtime.
+The repository is now initialized on Git. M0 Tasks 1 and 2 have added the root
+contributor README, exact Go/Node/pnpm toolchain declarations, package manifests and
+lockfiles, strict frontend quality configuration, stable root commands, an
+empty-secret `.env.example`, the canonical OpenAPI 3.1 contract, and generated Go and
+TypeScript transport boundaries. This is engineering foundation, not a product
+feature or deployed runtime.
 
 The following requested technologies and capabilities are therefore **not implemented**:
 
-- Runnable Go backend processes, module boundaries, migrations, OpenAPI, and
-  behavioral tests.
-- Next.js application shell, routes/components, and generated API client.
+- Runnable Go backend processes, hand-written module boundaries, migrations, and
+  behavioral handler tests.
+- Next.js application shell, routes/components, and generated-client runtime wiring.
 - PostgreSQL, Redis, object storage, messaging, and worker processes.
 - Docker/Compose, AWS, Terraform, EKS/Kubernetes, Helm, Argo CD, or CI/CD.
 - Authentication, tenant isolation, RBAC, domains, telemetry, backups, or runbooks.
