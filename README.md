@@ -45,6 +45,9 @@ Run these commands from the repository root:
 
 | Command | Purpose |
 | --- | --- |
+| `pnpm dev:api` | Run the Go API skeleton on `API_HTTP_ADDRESS` (default `:8080`). |
+| `pnpm dev:worker` | Run the cancellation-aware Go worker skeleton. |
+| `pnpm build:backend` | Compile every Go process entry point. |
 | `pnpm format` | Format Go and frontend files. |
 | `pnpm format:check` | Check formatting without changing files. |
 | `pnpm lint` | Run Go vet and frontend ESLint. |
@@ -59,10 +62,16 @@ Run these commands from the repository root:
 The commands intentionally have stable names before product code exists. Later M0
 tasks extend them with integration tests, migrations, and documentation checks.
 
+The API currently serves only `GET /health/live` and `GET /health/ready`. The
+organization operation in the OpenAPI compatibility fixture is deliberately not
+routed until its authentication, membership, and product behavior arrive in M1.
+Both Go processes validate configuration at startup and handle `SIGINT`/`SIGTERM`;
+the API withdraws readiness before draining in-flight requests.
+
 ## Current Structure
 
 ```text
-backend/       Go module and generated OpenAPI boundary; runnable processes arrive later
+backend/       Runnable Go API/worker skeletons and generated OpenAPI boundary
 frontend/      Next.js/React workspace and generated API client; the app shell arrives later
 docs/          Proposed product and engineering architecture
 scripts/       Small repository-level verification helpers

@@ -2,7 +2,32 @@
 
 ## Purpose And Status
 
-This document defines the proposed Go application architecture for ClouDesk. It is an implementation target, not a description of deployed software. The design supports a modular monolith plus independently deployed workers while keeping business rules, tenant authorization, and PostgreSQL transactions explicit.
+This document defines the Go application architecture for ClouDesk. Most domain,
+persistence, identity, messaging, and telemetry behavior remains an implementation
+target rather than deployed software. M0 Task 3 now provides the thin process and
+lifecycle foundation described below; later milestones extend it without changing
+the dependency direction.
+
+## Current M0 Process Foundation
+
+- `cmd/api` and `cmd/worker` are independently compilable composition roots with
+  validated environment configuration and signal-derived root contexts.
+- The API exposes only the generated `/health/live` and `/health/ready` operations.
+  The future M1 organization fixture is intentionally absent from the runtime router.
+- Request IDs are retained when valid and replaced when malformed or missing; the
+  effective value is returned on health and not-found responses.
+- Readiness starts false, becomes true only after HTTP serving starts, and returns to
+  false before bounded graceful shutdown. Liveness does not inspect dependencies.
+- API read/header/idle/request/shutdown bounds and the future worker drain bound are
+  typed durations with tested defaults and limits.
+- Empty domain package roots establish ownership boundaries, while an architecture
+  test prevents domain code from importing application composition, platform
+  adapters, or generated transport code.
+
+There is still no database, domain behavior, authentication, worker polling, or
+telemetry exporter. The generic worker currently proves cancellation and process
+ownership only; durable work intake and bounded in-flight draining arrive with the
+milestones that introduce real jobs.
 
 Related contracts are [API overview](../api/overview.md), [API conventions](../api/conventions.md), [idempotency](../api/idempotency.md), and [OpenAPI workflow](../api/openapi.md). The conceptual database and asynchronous-processing designs remain authoritative for schema details and broker policy.
 

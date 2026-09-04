@@ -13,7 +13,9 @@ It is the source of truth for paths, parameters, security requirements, request/
 M0 Task 2 implements the initial compatibility fixture: public liveness/readiness,
 the shared error and request-correlation shapes, opaque cookie security, and
 `GET /api/v1/organizations/{organizationId}` as a future M1 tenant-route contract.
-The organization operation is generated but has no handler or product behavior yet.
+M0 Task 3 serves the two health operations from the generated strict boundary. The
+organization operation remains generated but is not routed and has no handler or
+product behavior yet.
 
 The current single-file contract accepts document-local JSON Pointer references only.
 The repository checks this before any general-purpose OpenAPI resolver runs, preventing

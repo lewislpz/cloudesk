@@ -10,9 +10,12 @@
   },
   "scripts": {
     "build": "pnpm --dir frontend build",
+    "build:backend": "go -C backend build ./cmd/...",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm check:generated",
     "check:generated": "sh scripts/check-generated.sh",
     "dev": "pnpm --dir frontend dev",
+    "dev:api": "go -C backend run ./cmd/api",
+    "dev:worker": "go -C backend run ./cmd/worker",
     "format": "pnpm format:backend && pnpm --dir frontend format",
     "format:backend": "find backend -type f -name '*.go' -exec gofmt -w {} +",
     "format:check": "pnpm format:check:backend && pnpm --dir frontend format:check",
