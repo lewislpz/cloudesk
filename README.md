@@ -49,6 +49,10 @@ Run these commands from the repository root:
 | `pnpm dev` | Run the Next.js M0 shell on the local web port. |
 | `pnpm dev:api` | Run the Go API skeleton on `API_HTTP_ADDRESS` (default `:8080`). |
 | `pnpm dev:worker` | Run the cancellation-aware Go worker skeleton. |
+| `pnpm deps:up` | Start healthy persistent PostgreSQL and local OIDC dependencies. |
+| `pnpm deps:up:ephemeral` | Start the same dependency contracts without durable volumes. |
+| `pnpm deps:down` | Stop persistent local dependencies without deleting their data. |
+| `pnpm deps:reset` | Explicitly stop persistent dependencies and delete their local volumes. |
 | `pnpm build:backend` | Compile every Go process entry point. |
 | `pnpm format` | Format Go and frontend files. |
 | `pnpm format:check` | Check formatting without changing files. |
@@ -67,6 +71,22 @@ fresh disposable PostgreSQL database down and forward again, `make sqlc-generate
 updates the generated query package, and `make sqlc-check` proves generation creates
 no diff. PostgreSQL 17.11, sqlc 1.31.1, pgx 5.10.0, golang-migrate 4.19.1, and
 Testcontainers for Go 0.44.0 are pinned for this baseline.
+
+`pnpm deps:up` is the normal local-dependency bootstrap. It starts PostgreSQL 17.11
+and Dex 2.45.1, waits for both health checks, and preserves their data in Compose
+volumes. Use `pnpm deps:down` to stop them, or the deliberately destructive
+`pnpm deps:reset` when a fresh local state is required. The ephemeral equivalents
+use memory-backed storage and an isolated Compose project; stop them with
+`pnpm deps:down:ephemeral` before switching modes because both modes bind the
+same loopback ports.
+
+Dex is an OIDC-compatible fixture, not a production identity system. Its two
+synthetic accounts are `owner@clouddesk.local` and `member@clouddesk.local`, both
+with the public local-only password `clouddesk-local-only`. PostgreSQL and the OIDC
+client use the same conspicuously non-production fixture value by default. They bind
+only to loopback; production uses environment-specific Cognito and RDS secrets from
+the approved secret boundary. S3, SQS, and Redis adapters remain absent until a
+feature smoke contract needs them.
 
 The commands intentionally have stable names before product code exists. Later M0
 tasks extend them with local dependencies and documentation checks.
@@ -88,6 +108,7 @@ the first vertical milestone.
 ```text
 backend/       Runnable Go API/worker skeletons and generated OpenAPI boundary
                plus PostgreSQL migration/sqlc foundations
+config/local/  Synthetic, loopback-only local provider configuration
 frontend/      Responsive Next.js shells, generated API runtime, and component tests
 docs/          Proposed product and engineering architecture
 scripts/       Small repository-level verification helpers

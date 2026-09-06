@@ -2,10 +2,10 @@
 
 ## Purpose And Status
 
-This document defines the proposed local, dev, staging, and production environments
-and makes their differences deliberate. It prevents the AWS/EKS production target from
-turning every developer environment into a production-cost copy. No environment is
-currently implemented.
+This document defines the local, dev, staging, and production environments and makes
+their differences deliberate. It prevents the AWS/EKS production target from turning
+every developer environment into a production-cost copy. The local PostgreSQL and
+OIDC dependency baseline is implemented; shared cloud environments remain proposed.
 
 See [AWS target architecture](aws.md), [networking](networking.md), and
 [cost management](cost-management.md).
@@ -53,6 +53,15 @@ PostgreSQL, an optional Redis-compatible service, an S3-compatible adapter, an
 SQS-compatible adapter, email capture, and an OIDC test provider. Each adapter must
 preserve the application-facing contract and failure tests; local convenience must
 not invent stronger ordering or exactly-once delivery than AWS provides.
+
+The implemented Compose baseline uses a persistent default set and an explicit
+`ephemeral` profile. `pnpm deps:up` waits for persistent PostgreSQL and Dex health;
+`pnpm deps:up:ephemeral` targets the memory-backed profile in a separate project.
+Both publish only loopback ports and therefore must not run concurrently.
+`pnpm deps:reset` is the sole normal command that deletes the persistent volumes.
+The fixed Dex users and conspicuously local-only credentials are public fixtures,
+not secrets or valid production configuration. Optional S3, queue, Redis, and email
+adapters are omitted until an owning feature requires their contract.
 
 Provide seeded users in multiple organizations, identical IDs in different tenant
 fixtures where useful, invalid cross-tenant objects, duplicate events, and idempotency

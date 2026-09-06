@@ -1,0 +1,48 @@
+# This provider and its identities are synthetic local fixtures. They are not a
+# production identity configuration and must never receive real credentials.
+issuer: http://localhost:5556/dex
+
+storage:
+  type: sqlite3
+  config:
+    file: /var/dex/dex.db
+
+web:
+  http: 0.0.0.0:5556
+  headers:
+    X-Frame-Options: DENY
+    X-Content-Type-Options: nosniff
+    Content-Security-Policy: "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'"
+
+telemetry:
+  http: 0.0.0.0:5558
+
+oauth2:
+  responseTypes: ["code"]
+  skipApprovalScreen: true
+
+staticClients:
+  - idEnv: DEX_CLIENT_ID
+    secretEnv: DEX_CLIENT_SECRET
+    name: ClouDesk local development
+    redirectURIs:
+      - http://localhost:8080/api/v1/auth/oidc/callback
+
+enablePasswordDB: true
+staticPasswords:
+  - email: owner@clouddesk.local
+    hashFromEnv: DEX_LOCAL_PASSWORD_HASH
+    username: local-owner
+    name: Local Owner
+    emailVerified: true
+    userID: 00000000-0000-4000-8000-000000000001
+  - email: member@clouddesk.local
+    hashFromEnv: DEX_LOCAL_PASSWORD_HASH
+    username: local-member
+    name: Local Member
+    emailVerified: true
+    userID: 00000000-0000-4000-8000-000000000002
+
+logger:
+  level: info
+  format: json
