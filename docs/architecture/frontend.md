@@ -2,11 +2,14 @@
 
 ## Purpose And Status
 
-This document proposes the frontend architecture for ClouDesk. The repository does
-not yet contain a frontend implementation, so every file, boundary, dependency, and
-runtime behavior below is a target rather than a statement of current capability.
-The design favors a small local V1 that can evolve into the production target
-without introducing a second application architecture.
+This document defines the frontend architecture for ClouDesk. M0 now implements its
+first thin slice: public, onboarding, and tenant-shaped workspace shells; Server
+Components by default; a generated-client browser runtime; organization-scoped query
+keys; shared accessible states; and Vitest component checks. Authentication,
+organization resolution, feature workflows, server-side API adapters, and production
+telemetry remain targets rather than current capability. The design favors a small
+local V1 that can evolve into the production target without introducing a second
+application architecture.
 
 The proposal uses Next.js App Router, React, strict TypeScript, Tailwind CSS, and
 TanStack Query. React Hook Form and Zod are proposed for non-trivial forms;
@@ -346,10 +349,11 @@ state but never serve as the only error or success feedback.
 ## Screen And Responsive Model
 
 The authenticated desktop shell uses a persistent sidebar, page header, and content
-region. Tablet layouts collapse secondary navigation. Mobile uses a compact top bar
-and accessible navigation drawer; primary actions remain reachable without relying
-on hover. The proposal starts mobile-aware but does not force dense desktop workflows
-into identical mobile controls.
+region. The M0 mobile shell turns its small navigation set into a horizontally
+scrollable top section; once feature navigation requires disclosure, that section
+becomes an accessible drawer. Primary actions remain reachable without relying on
+hover. The design starts mobile-aware but does not force dense desktop workflows into
+identical mobile controls.
 
 | Screen group | Primary responsive and state considerations |
 | --- | --- |
@@ -482,14 +486,16 @@ security review. Add virtualization when production-sized collections demonstrat
 rendering bottleneck. Split a frontend deployable only when independent ownership,
 release cadence, or isolation pressure outweighs the contract and operational cost.
 
-## Open Questions To Resolve Before Implementation
+## Open Questions For Later Verticals
 
 - Which concrete Next.js-compatible session library or application session
   implementation satisfies the final identity and revocation design?
-- Which generated OpenAPI client tool best preserves required path parameters,
-  `AbortSignal`, normalized errors, and both server/browser adapters?
-- Which component-test runner and design-system primitives minimize dependencies
-  while meeting accessibility requirements?
+- The M0 browser runtime uses the generated Hey API fetch client; the server adapter
+  and normalized error model still need to prove request-context and cancellation
+  behavior in a real feature.
+- M0 uses Vitest, React Testing Library, `axe-core`, Tailwind tokens, and small
+  semantic React primitives. Adopt an external primitive library only when a real
+  interaction such as a dialog demonstrates the need.
 - Which browser telemetry backend and sampling policy align with the selected
   observability platform and data-retention rules?
 

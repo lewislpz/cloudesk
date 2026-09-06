@@ -9,6 +9,9 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "noEmit": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "plugins": [
       {
         "name": "next"

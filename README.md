@@ -45,6 +45,7 @@ Run these commands from the repository root:
 
 | Command | Purpose |
 | --- | --- |
+| `pnpm dev` | Run the Next.js M0 shell on the local web port. |
 | `pnpm dev:api` | Run the Go API skeleton on `API_HTTP_ADDRESS` (default `:8080`). |
 | `pnpm dev:worker` | Run the cancellation-aware Go worker skeleton. |
 | `pnpm build:backend` | Compile every Go process entry point. |
@@ -68,11 +69,17 @@ routed until its authentication, membership, and product behavior arrive in M1.
 Both Go processes validate configuration at startup and handle `SIGINT`/`SIGTERM`;
 the API withdraws readiness before draining in-flight requests.
 
+The web application currently renders the public route at `/`, the onboarding
+shell at `/onboarding`, and the tenant-shaped workspace shell at
+`/{organizationSlug}`. These routes deliberately contain no product data and do not
+claim authentication; the session and immutable organization resolution arrive in
+the first vertical milestone.
+
 ## Current Structure
 
 ```text
 backend/       Runnable Go API/worker skeletons and generated OpenAPI boundary
-frontend/      Next.js/React workspace and generated API client; the app shell arrives later
+frontend/      Responsive Next.js shells, generated API runtime, and component tests
 docs/          Proposed product and engineering architecture
 scripts/       Small repository-level verification helpers
 ```

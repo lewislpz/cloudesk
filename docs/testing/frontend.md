@@ -2,16 +2,18 @@
 
 ## Purpose And Status
 
-This document defines planned verification for the Next.js App Router, React, strict
+This document defines verification for the Next.js App Router, React, strict
 TypeScript, generated OpenAPI client, TanStack Query, forms, permission-aware UX, and
 accessibility. It complements the [frontend architecture](../architecture/frontend.md)
-and [E2E strategy](e2e.md). No frontend test runner is configured yet.
+and [E2E strategy](e2e.md). M0 configures Vitest with jsdom, React Testing Library,
+and `axe-core` for the implemented application-shell boundary.
 
-The proposed M0 default is Vitest, React Testing Library, `@testing-library/user-event`,
-MSW at the HTTP boundary, and automated `axe-core` checks. The compatibility spike
-must confirm the selected Next.js/React versions, Server Component boundaries, fake
-timers, ESM, and coverage behavior before versions are pinned. A different runner may
-be selected if that evidence fails; the behaviors below remain mandatory.
+The M0 suite covers semantic shell rendering, shared async states, same-origin
+generated-client behavior, CSRF injection, tenant query keys, and browser-storage
+guards. `@testing-library/user-event` and MSW remain deferred until an implemented
+interaction or networked feature needs those boundaries. Production build and strict
+type checks complement the component suite; the broader behaviors below remain
+mandatory as their owning features arrive.
 
 ## Test Layers
 
