@@ -24,10 +24,12 @@ the dependency direction.
   test prevents domain code from importing application composition, platform
   adapters, or generated transport code.
 
-There is still no database, domain behavior, authentication, worker polling, or
-telemetry exporter. The generic worker currently proves cancellation and process
-ownership only; durable work intake and bounded in-flight draining arrive with the
-milestones that introduce real jobs.
+M0 now includes the PostgreSQL migration/sqlc workflow and a bounded `pgxpool`
+constructor, but the API and worker do not connect to a database yet. There is still
+no domain behavior, authentication, worker polling, or telemetry exporter. The
+generic worker currently proves cancellation and process ownership only; durable work
+intake and bounded in-flight draining arrive with the milestones that introduce real
+jobs.
 
 Related contracts are [API overview](../api/overview.md), [API conventions](../api/conventions.md), [idempotency](../api/idempotency.md), and [OpenAPI workflow](../api/openapi.md). The conceptual database and asynchronous-processing designs remain authoritative for schema details and broker policy.
 

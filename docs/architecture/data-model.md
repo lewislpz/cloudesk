@@ -2,7 +2,11 @@
 
 ## Purpose And Status
 
-This document defines the proposed relational model, integrity controls, access paths, and operational database practices for ClouDesk. It is an implementation contract for future migrations and SQL, not a description of an existing schema.
+This document defines the relational model, integrity controls, access paths, and
+operational database practices for ClouDesk. M0 implements only the technical
+`foundation_metadata` migration, generated metadata query, bounded pool constructor,
+and disposable PostgreSQL verification. Every product table and domain rule below
+remains an implementation contract for future migrations and SQL.
 
 [ADR-003](../decisions/ADR-003-postgresql-system-of-record.md) makes PostgreSQL the system of record. [ADR-005](../decisions/ADR-005-sqlc-and-pgx.md) selects explicit SQL with `sqlc` and `pgx`; [ADR-008](../decisions/ADR-008-transactional-outbox-and-inbox.md) defines reliable events; [ADR-010](../decisions/ADR-010-multi-tenant-isolation.md) defines layered tenant isolation; and [ADR-020](../decisions/ADR-020-expand-contract-migrations.md) governs schema evolution.
 
@@ -626,6 +630,12 @@ Database roles are separated:
 Table owners and roles with `BYPASSRLS` are never used by normal workloads. RLS does not replace composite FKs, route membership checks, permission evaluation, recipient checks, or tenant-prefixed S3/cache/event identities.
 
 ## `pgx`, `sqlc`, And Connection Pools
+
+The M0 executable baseline pins PostgreSQL 17.11 by multi-platform image digest,
+`sqlc` 1.31.1, `pgx` 5.10.0, `golang-migrate` 4.19.1, and Testcontainers for Go
+0.44.0. `backend/migrations` is the schema source, `backend/queries` is the reviewed
+query source, and `backend/internal/gen/sqlc` is generated and drift-checked. These
+versions are implementation facts; later upgrades remain ordinary reviewed changes.
 
 - Versioned migrations are the schema source. `sqlc` compiles reviewed SQL against that schema and generates persistence DTOs/interfaces; domain types remain separate where invariants require behavior.
 - All generated tenant queries take `organization_id` explicitly. CI rejects suspicious ID-only statements through query review/search plus repository integration tests using two tenants.

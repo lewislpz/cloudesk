@@ -18,8 +18,9 @@ Install the language and package-manager versions pinned in
 - Node.js 24.15.0
 - pnpm 10.15.1
 
-Docker 29.x is required by later local-dependency tasks but is not managed by this
-repository's language toolchain file.
+Docker 29.x is required by the disposable PostgreSQL integration tests and later
+local-dependency tasks, but is not managed by this repository's language toolchain
+file.
 
 The exact pnpm version is also recorded in `package.json`. Package versions are
 locked in `pnpm-lock.yaml`; do not install with an unfrozen lockfile in CI.
@@ -55,13 +56,20 @@ Run these commands from the repository root:
 | `pnpm typecheck` | Type-check the frontend. |
 | `pnpm test` | Run backend and frontend unit tests. |
 | `pnpm generate` | Regenerate OpenAPI clients plus registered Go and frontend outputs. |
+| `pnpm generate:database` | Regenerate the pinned sqlc persistence boundary. |
 | `pnpm generate:openapi` | Generate strict Go interfaces and the TypeScript fetch client. |
 | `pnpm lint:openapi` | Lint the API contract and reject incompatible changes when a baseline exists. |
 | `pnpm check:generated` | Regenerate and fail if either generated tree changes. |
 | `pnpm check` | Run every non-mutating foundation check. |
 
+Database-specific commands run from `backend/`: `make db-test-reset` migrates a
+fresh disposable PostgreSQL database down and forward again, `make sqlc-generate`
+updates the generated query package, and `make sqlc-check` proves generation creates
+no diff. PostgreSQL 17.11, sqlc 1.31.1, pgx 5.10.0, golang-migrate 4.19.1, and
+Testcontainers for Go 0.44.0 are pinned for this baseline.
+
 The commands intentionally have stable names before product code exists. Later M0
-tasks extend them with integration tests, migrations, and documentation checks.
+tasks extend them with local dependencies and documentation checks.
 
 The API currently serves only `GET /health/live` and `GET /health/ready`. The
 organization operation in the OpenAPI compatibility fixture is deliberately not
@@ -79,6 +87,7 @@ the first vertical milestone.
 
 ```text
 backend/       Runnable Go API/worker skeletons and generated OpenAPI boundary
+               plus PostgreSQL migration/sqlc foundations
 frontend/      Responsive Next.js shells, generated API runtime, and component tests
 docs/          Proposed product and engineering architecture
 scripts/       Small repository-level verification helpers

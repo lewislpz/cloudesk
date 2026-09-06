@@ -2,11 +2,14 @@
 
 ## Purpose And Status
 
-This document defines planned verification for the Go API, modular domain packages,
+This document defines verification for the Go API, modular domain packages,
 PostgreSQL repositories, outbox publisher, and workers. It specializes the
 [quality strategy](strategy.md) and the seams in the
-[Go backend architecture](../architecture/backend.md). No Go tests or production
-code currently exist.
+[Go backend architecture](../architecture/backend.md). M0 currently exercises the
+process/health skeleton, architecture imports, bounded pool validation, migration
+round trips against disposable PostgreSQL, and a generated sqlc query. Domain,
+repository, authorization, event, and worker behavior remains planned until its
+owning feature exists.
 
 ## Go Test Layers
 

@@ -37,3 +37,5 @@ if grep -R -q '__Host-cloudesk_session' "$generated_dir/frontend/src/lib/api/gen
   echo "generated browser client must not request access to the HttpOnly session cookie" >&2
   exit 1
 fi
+
+"$repo_root/scripts/check-sqlc.sh"

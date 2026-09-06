@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "name": "foundation",
+  "owner": "platform",
+  "purpose": "Establish the technical migration and sqlc verification baseline without product-domain tables.",
+  "sha256": "f75d1165c0155696cc4b46fee85cb0ba2a21b66b14f42b8464990a3b0107dcb2",
+  "affected_tables": ["foundation_metadata"],
+  "compatibility": "Additive and compatible with the M0 process skeleton.",
+  "reversible": true,
+  "transaction_mode": "transactional",
+  "expected_lock": "Only the newly created foundation_metadata table is locked.",
+  "expected_runtime": "Less than one second on an empty schema.",
+  "backfill": "None.",
+  "verification": [
+    "The migration version is 1 and not dirty.",
+    "foundation_metadata contains the clouddesk schema generation 1 marker.",
+    "No product-domain table exists."
+  ],
+  "rollback": "The down migration is permitted only for disposable local/test databases.",
+  "roll_forward": "Apply the next immutable numbered migration; never edit an applied file."
+}

@@ -19,7 +19,7 @@ documentation, application artifacts, or Git repository. That historical observa
 explains why the architecture was treated as greenfield rather than inferred from
 code.
 
-The repository is now initialized on Git. M0 Tasks 1 through 4 have added the root
+The repository is now initialized on Git. M0 Tasks 1 through 5 have added the root
 contributor README, exact Go/Node/pnpm toolchain declarations, package manifests and
 lockfiles, strict frontend quality configuration, stable root commands, an
 empty-secret `.env.example`, the canonical OpenAPI 3.1 contract, and generated Go and
@@ -28,12 +28,15 @@ roots, typed configuration, bounded lifecycle primitives, health behavior, domai
 package boundaries, and process-level shutdown tests. The Next.js application now
 has responsive public, onboarding, and tenant-shaped workspace shells, accessible
 loading/empty/error states, an injected generated-client runtime, tenant-aware query
-keys, and component/accessibility tests. This remains engineering foundation, not a
-product feature or deployed runtime.
+keys, and component/accessibility tests. The database foundation now adds ordered
+migrations with checked metadata, deterministic sqlc generation, bounded pgx pools,
+and disposable PostgreSQL migration/query tests without introducing product tables.
+This remains engineering foundation, not a product feature or deployed runtime.
 
 The following requested technologies and capabilities are therefore **not implemented**:
 
-- Product Go handlers/use cases, persistence adapters, migrations, and database tests.
+- Product Go handlers/use cases, domain persistence adapters, and domain database
+  tests.
 - Frontend authentication/session enforcement, immutable organization resolution,
   and product feature workflows.
 - PostgreSQL, Redis, object storage, messaging, and real worker polling/job execution.

@@ -8,9 +8,9 @@ These ADRs record proposed hard-to-reverse choices for ClouDesk. They are design
 | --- | --- | --- |
 | [ADR-001](ADR-001-go-backend.md) | Go backend | Proposed |
 | [ADR-002](ADR-002-nextjs-typescript-frontend.md) | Next.js and TypeScript frontend | Proposed |
-| [ADR-003](ADR-003-postgresql-system-of-record.md) | PostgreSQL system of record | Proposed |
+| [ADR-003](ADR-003-postgresql-system-of-record.md) | PostgreSQL system of record | Accepted |
 | [ADR-004](ADR-004-modular-monolith-and-workers.md) | Modular monolith and workers | Proposed |
-| [ADR-005](ADR-005-sqlc-and-pgx.md) | sqlc and pgx | Proposed |
+| [ADR-005](ADR-005-sqlc-and-pgx.md) | sqlc and pgx | Accepted |
 | [ADR-006](ADR-006-openapi-contract.md) | OpenAPI contract | Proposed |
 | [ADR-007](ADR-007-amazon-sqs-messaging.md) | Amazon SQS messaging | Proposed |
 | [ADR-008](ADR-008-transactional-outbox-and-inbox.md) | Transactional outbox and inbox | Proposed |

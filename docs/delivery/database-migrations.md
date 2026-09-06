@@ -2,10 +2,13 @@
 
 ## Purpose And Status
 
-This document defines zero-downtime PostgreSQL change delivery for ClouDesk. It is a
-future implementation contract: no schema, migration runner, RDS instance, or release
-Job currently exists. It applies [ADR-020](../decisions/ADR-020-expand-contract-migrations.md)
-to rolling deployments and the data rules in the
+This document defines zero-downtime PostgreSQL change delivery for ClouDesk. M0 now
+implements ordered migration files, per-migration metadata/checksum evidence, a
+pinned `golang-migrate` test runner, sqlc drift checking, and fresh disposable
+PostgreSQL verification. No shared database, RDS instance, migration image, release
+Job, previous-release upgrade fixture, or product schema exists yet. The remaining
+sections apply [ADR-020](../decisions/ADR-020-expand-contract-migrations.md) to rolling
+deployments and the data rules in the
 [PostgreSQL model](../architecture/data-model.md#migration-strategy).
 
 ## Core Contract
