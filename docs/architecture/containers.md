@@ -4,7 +4,9 @@
 
 This document proposes the C4 container view and runtime responsibilities for
 ClouDesk. Here, “container” means a separately executable application or data store,
-not necessarily a Docker container. Nothing in this view is currently deployed.
+not necessarily a Docker container. M0 now builds non-root API and web OCI images and
+runs PostgreSQL plus a local OIDC fixture through Compose; nothing in this view is
+currently deployed.
 
 See the [system context](system-context.md) for actors and trust boundaries, the
 [architecture overview](overview.md) for internal modules, and

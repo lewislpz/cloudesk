@@ -1,0 +1,17 @@
+**
+
+!.npmrc
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!frontend/
+!frontend/**
+
+frontend/.next/
+frontend/coverage/
+frontend/node_modules/
+frontend/*.log
+frontend/*.tmp
+frontend/*.key
+frontend/*.pem
+frontend/*.crt

@@ -6,9 +6,11 @@ This document defines verification at ClouDesk's persistence, HTTP, event, objec
 identity, infrastructure, and deployment boundaries. M0 now has one real persistence
 slice: a digest-pinned PostgreSQL Testcontainer applies the technical schema from
 empty, resets it, rolls forward again, and exercises generated sqlc code through a
-bounded pgx pool. The other environments and suites remain planned. The strategy
-keeps local integration reproducible while reserving real AWS and Kubernetes
-verification for isolated sandbox or production-shaped staging.
+bounded pgx pool. Its Compose smoke also proves persistent and ephemeral PostgreSQL,
+OIDC discovery and an S256 PKCE code exchange, while runtime smokes exercise the
+non-root API and standalone web images. The other environments and suites remain
+planned. The strategy keeps local integration reproducible while reserving real AWS
+and Kubernetes verification for isolated sandbox or production-shaped staging.
 
 ## Integration Topology
 

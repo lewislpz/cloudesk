@@ -11,6 +11,9 @@
   "scripts": {
     "build": "pnpm --dir frontend build",
     "build:backend": "go -C backend build ./cmd/...",
+    "build:image:api": "docker build --tag clouddesk-api:test backend",
+    "build:image:web": "docker build --file frontend/Dockerfile --tag clouddesk-web:test .",
+    "build:images": "pnpm build:image:api && pnpm build:image:web",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm check:generated",
     "check:generated": "sh scripts/check-generated.sh",
     "deps:down": "sh scripts/local-dependencies.sh down persistent",
@@ -35,6 +38,7 @@
     "lint:openapi": "node scripts/check-openapi-contract.mjs && redocly lint clouddesk@v1 && sh scripts/check-openapi-compatibility.sh",
     "test": "pnpm test:backend && pnpm --dir frontend test",
     "test:backend": "sh scripts/run-go-packages.sh test",
+    "test:images": "sh scripts/check-container-images.sh",
     "typecheck": "pnpm --dir frontend typecheck"
   },
   "devDependencies": {

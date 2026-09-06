@@ -19,10 +19,10 @@ documentation, application artifacts, or Git repository. That historical observa
 explains why the architecture was treated as greenfield rather than inferred from
 code.
 
-The repository is now initialized on Git. M0 Tasks 1 through 5 have added the root
+The repository is now initialized on Git. M0 Tasks 1 through 7 have added the root
 contributor README, exact Go/Node/pnpm toolchain declarations, package manifests and
 lockfiles, strict frontend quality configuration, stable root commands, an
-empty-secret `.env.example`, the canonical OpenAPI 3.1 contract, and generated Go and
+safe local `.env.example`, the canonical OpenAPI 3.1 contract, and generated Go and
 TypeScript transport boundaries. The Go API and worker now have runnable composition
 roots, typed configuration, bounded lifecycle primitives, health behavior, domain
 package boundaries, and process-level shutdown tests. The Next.js application now
@@ -31,7 +31,11 @@ loading/empty/error states, an injected generated-client runtime, tenant-aware q
 keys, and component/accessibility tests. The database foundation now adds ordered
 migrations with checked metadata, deterministic sqlc generation, bounded pgx pools,
 and disposable PostgreSQL migration/query tests without introducing product tables.
-This remains engineering foundation, not a product feature or deployed runtime.
+Digest-pinned Compose services now provide persistent and ephemeral PostgreSQL plus
+a synthetic local OIDC provider. Multi-stage, allowlisted-context Dockerfiles produce
+a static scratch-based API image and standalone Next.js image with non-root runtime
+users and OCI metadata. This remains engineering foundation, not a product feature or
+deployed runtime.
 
 The following requested technologies and capabilities are therefore **not implemented**:
 
@@ -39,9 +43,11 @@ The following requested technologies and capabilities are therefore **not implem
   tests.
 - Frontend authentication/session enforcement, immutable organization resolution,
   and product feature workflows.
-- PostgreSQL, Redis, object storage, messaging, and real worker polling/job execution.
-- Docker/Compose, AWS, Terraform, EKS/Kubernetes, Helm, Argo CD, or CI/CD.
-- Authentication, tenant isolation, RBAC, domains, telemetry, backups, or runbooks.
+- Domain PostgreSQL schemas/repositories, Redis, object storage, messaging, and real
+  worker polling/job execution.
+- AWS, Terraform, EKS/Kubernetes, Helm, Argo CD, or CI/CD.
+- Application authentication, tenant isolation, RBAC, domain behavior, telemetry,
+  backups, or executable runbooks.
 
 ## Conflicts And Resolutions
 

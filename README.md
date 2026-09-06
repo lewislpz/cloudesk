@@ -54,11 +54,13 @@ Run these commands from the repository root:
 | `pnpm deps:down` | Stop persistent local dependencies without deleting their data. |
 | `pnpm deps:reset` | Explicitly stop persistent dependencies and delete their local volumes. |
 | `pnpm build:backend` | Compile every Go process entry point. |
+| `pnpm build:images` | Build the pinned non-root API and web OCI images with local test tags. |
 | `pnpm format` | Format Go and frontend files. |
 | `pnpm format:check` | Check formatting without changing files. |
 | `pnpm lint` | Run Go vet and frontend ESLint. |
 | `pnpm typecheck` | Type-check the frontend. |
 | `pnpm test` | Run backend and frontend unit tests. |
+| `pnpm test:images` | Build and harden-smoke both runtime images locally. |
 | `pnpm generate` | Regenerate OpenAPI clients plus registered Go and frontend outputs. |
 | `pnpm generate:database` | Regenerate the pinned sqlc persistence boundary. |
 | `pnpm generate:openapi` | Generate strict Go interfaces and the TypeScript fetch client. |
@@ -88,6 +90,15 @@ only to loopback; production uses environment-specific Cognito and RDS secrets f
 the approved secret boundary. S3, SQS, and Redis adapters remain absent until a
 feature smoke contract needs them.
 
+`pnpm build:images` creates `clouddesk-api:test` and `clouddesk-web:test` without
+publishing them. The API uses `backend/` as its narrow build context. The web build
+uses the repository root because the authoritative pnpm workspace lockfile lives
+there, while the root `.dockerignore` sends only frontend and package-manager inputs.
+Both multi-stage definitions pin their base image digest, carry OCI source/revision
+labels, and run as non-root; no runtime endpoint or secret is baked into either
+image. Release automation will replace the local tag and default revision label with
+the immutable source revision and promoted digest.
+
 The commands intentionally have stable names before product code exists. Later M0
 tasks extend them with local dependencies and documentation checks.
 
@@ -109,7 +120,8 @@ the first vertical milestone.
 backend/       Runnable Go API/worker skeletons and generated OpenAPI boundary
                plus PostgreSQL migration/sqlc foundations
 config/local/  Synthetic, loopback-only local provider configuration
-frontend/      Responsive Next.js shells, generated API runtime, and component tests
+frontend/      Responsive Next.js shells, standalone image build, generated API
+               runtime, and component tests
 docs/          Proposed product and engineering architecture
 scripts/       Small repository-level verification helpers
 ```
