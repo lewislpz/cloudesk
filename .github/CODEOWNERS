@@ -1,0 +1,10 @@
+/.github/ @lewislpz
+/scripts/ @lewislpz
+/backend/Dockerfile @lewislpz
+/frontend/Dockerfile @lewislpz
+/backend/migrations/ @lewislpz
+/backend/api/ @lewislpz
+/pnpm-lock.yaml @lewislpz
+/.gitleaksignore @lewislpz
+/.tool-versions @lewislpz
+/.dockerignore @lewislpz

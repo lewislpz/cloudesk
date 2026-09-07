@@ -2,7 +2,10 @@
 
 ## Status
 
-Proposed
+Accepted
+
+M0 adopts the rendering/type/query foundations. React Hook Form and Zod remain
+conditional choices for later complex forms, not installed M0 dependencies.
 
 ## Context
 

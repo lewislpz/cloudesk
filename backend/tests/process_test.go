@@ -5,6 +5,9 @@ package tests
 import (
 	"bufio"
 	"bytes"
+	"context"
+	"encoding/json"
+	"errors"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -114,4 +117,43 @@ func processEnvironment(overrides []string) []string {
 		environment = append(environment, entry)
 	}
 	return append(environment, overrides...)
+}
+
+func TestProcessesRejectConfigurationWithoutLeakingValues(t *testing.T) {
+	for _, process := range []string{"api", "worker"} {
+		t.Run(process, func(t *testing.T) {
+			binary := filepath.Join(t.TempDir(), process)
+			build := exec.Command("go", "build", "-o", binary, "./cmd/"+process)
+			build.Dir = ".."
+			if output, err := build.CombinedOutput(); err != nil {
+				t.Fatalf("build: %v\n%s", err, output)
+			}
+			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+			command := exec.CommandContext(ctx, binary)
+			const sensitiveValue = "synthetic-private-configuration-value"
+			command.Env = processEnvironment([]string{"APP_ENV=" + sensitiveValue})
+			output, err := command.CombinedOutput()
+			if ctx.Err() != nil {
+				t.Fatal("invalid configuration did not fail within the startup deadline")
+			}
+			var exitError *exec.ExitError
+			if !errors.As(err, &exitError) || exitError.ExitCode() != 1 {
+				t.Fatalf("startup exit = %v, want exit 1", err)
+			}
+			if bytes.Contains(output, []byte(sensitiveValue)) {
+				t.Fatal("startup log contains the rejected configuration value")
+			}
+			var event struct {
+				Level string `json:"level"`
+				Error string `json:"error"`
+			}
+			if err := json.Unmarshal(bytes.TrimSpace(output), &event); err != nil {
+				t.Fatalf("startup error is not a single structured event: %v", err)
+			}
+			if event.Level != "ERROR" || !strings.Contains(event.Error, "APP_ENV") {
+				t.Fatalf("startup error lacks safe diagnostic context: %#v", event)
+			}
+		})
+	}
 }

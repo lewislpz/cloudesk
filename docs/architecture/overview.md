@@ -3,9 +3,10 @@
 ## Purpose
 
 This document proposes the software boundaries, bounded contexts, dependency rules,
-and module architecture for ClouDesk. It is a design target, not a description of an
-implemented system. The repository currently contains no product application or
-infrastructure.
+and module architecture for ClouDesk. M0 implements process and module boundaries,
+health/configuration, the Next.js shell, generated transport and persistence tooling,
+local dependencies, and CI. Domain behavior and production infrastructure remain
+design targets; see the [repository assessment](../repository-assessment.md).
 
 Related views:
 

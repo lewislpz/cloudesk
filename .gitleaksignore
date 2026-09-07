@@ -1,0 +1,4 @@
+# Reviewed documentation false positives: UUID idempotency example and severity prose.
+# Exact historical fingerprints; future findings remain blocking.
+47b3676caccff225d75e3392a2192477fb89697e:docs/api/idempotency.md:generic-api-key:24
+47b3676caccff225d75e3392a2192477fb89697e:docs/operations/alerting.md:generic-api-key:20

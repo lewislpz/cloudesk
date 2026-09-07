@@ -15,11 +15,11 @@ Install the language and package-manager versions pinned in
 [.tool-versions](.tool-versions):
 
 - Go 1.27.0
-- Node.js 24.15.0
+- Node.js 24.20.0
 - pnpm 10.15.1
 
-Docker 29.x is required by the disposable PostgreSQL integration tests and later
-local-dependency tasks, but is not managed by this repository's language toolchain
+Docker 29.x with Compose v2 and Buildx is the verified local runtime for PostgreSQL
+integration tests, dependencies, and image checks, but is not managed by this repository's language toolchain
 file.
 
 The exact pnpm version is also recorded in `package.json`. Package versions are
@@ -57,16 +57,18 @@ Run these commands from the repository root:
 | `pnpm build:images` | Build the pinned non-root API and web OCI images with local test tags. |
 | `pnpm format` | Format Go and frontend files. |
 | `pnpm format:check` | Check formatting without changing files. |
-| `pnpm lint` | Run Go vet and frontend ESLint. |
+| `pnpm lint` | Run OpenAPI checks, Go vet, and frontend ESLint. |
 | `pnpm typecheck` | Type-check the frontend. |
-| `pnpm test` | Run backend and frontend unit tests. |
+| `pnpm test` | Run Go tests (including disposable PostgreSQL) and frontend component tests. |
 | `pnpm test:images` | Build and harden-smoke both runtime images locally. |
 | `pnpm generate` | Regenerate OpenAPI clients plus registered Go and frontend outputs. |
 | `pnpm generate:database` | Regenerate the pinned sqlc persistence boundary. |
 | `pnpm generate:openapi` | Generate strict Go interfaces and the TypeScript fetch client. |
 | `pnpm lint:openapi` | Lint the API contract and reject incompatible changes when a baseline exists. |
 | `pnpm check:generated` | Regenerate and fail if either generated tree changes. |
-| `pnpm check` | Run every non-mutating foundation check. |
+| `pnpm check` | Run formatting, lint, types, tests, and generated drift checks. |
+| `make docs-check` | Check documentation links, fences, and product naming. |
+| `make test-foundation` | Run foundation checks, uncached race tests, production web HTTP smoke, and CI/docs policy checks. |
 
 Database-specific commands run from `backend/`: `make db-test-reset` migrates a
 fresh disposable PostgreSQL database down and forward again, `make sqlc-generate`
@@ -94,13 +96,15 @@ feature smoke contract needs them.
 publishing them. The API uses `backend/` as its narrow build context. The web build
 uses the repository root because the authoritative pnpm workspace lockfile lives
 there, while the root `.dockerignore` sends only frontend and package-manager inputs.
+Run `sh scripts/scan-container-images.sh /tmp/clouddesk-sbom` after building to
+create inventories and apply the CI high/critical vulnerability gate locally.
+
 Both multi-stage definitions pin their base image digest, carry OCI source/revision
 labels, and run as non-root; no runtime endpoint or secret is baked into either
 image. Release automation will replace the local tag and default revision label with
 the immutable source revision and promoted digest.
 
-The commands intentionally have stable names before product code exists. Later M0
-tasks extend them with local dependencies and documentation checks.
+Pull requests, merge queue candidates, and pushes to `main` run the [CI workflow](.github/workflows/ci.yml). See [CI gates and limitations](docs/delivery/ci.md).
 
 The API currently serves only `GET /health/live` and `GET /health/ready`. The
 organization operation in the OpenAPI compatibility fixture is deliberately not
@@ -122,7 +126,8 @@ backend/       Runnable Go API/worker skeletons and generated OpenAPI boundary
 config/local/  Synthetic, loopback-only local provider configuration
 frontend/      Responsive Next.js shells, standalone image build, generated API
                runtime, and component tests
-docs/          Proposed product and engineering architecture
+docs/          Implemented M0 reference and proposed product/production architecture
+.github/       Read-only CI, dependency updates, and review ownership
 scripts/       Small repository-level verification helpers
 ```
 

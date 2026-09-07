@@ -1,11 +1,33 @@
-# Proposed Continuous Integration Architecture
+# Continuous Integration
 
 ## Purpose And Status
 
-This document defines the planned GitHub Actions quality and supply-chain gates for
-ClouDesk. It is a design: the repository currently has no Git history, application
-source, workflow, runner, registry, or deployable artifact. M0 introduces the first
-executable pipeline; M14 completes artifact promotion and GitOps delivery.
+M0 supplies [.github/workflows/ci.yml](../../.github/workflows/ci.yml): read-only
+pull-request, merge-group, and main-push checks on GitHub-hosted Ubuntu runners.
+The workflow runs locked installs, formatting, lint, types, tests with disposable
+PostgreSQL, race detection, production web build, OpenAPI/sqlc drift, semantic API
+diff against the event base SHA, immutable shared migrations, documentation checks,
+and control-plane verification. `CI / required` fails unless all three jobs pass.
+
+Gitleaks scans history with redacted output; two exact historical documentation
+false positives are recorded in `.gitleaksignore`. New findings block. pnpm audit
+blocks high/critical dependency findings; govulncheck checks reachable Go issues.
+The image job builds and smoke-tests both runtimes, creates CycloneDX inventories
+with Syft, and scans with Grype, blocking high and critical findings including
+unfixed issues. Scanner/database failures also fail CI. Inventories are transient
+runner files, not signed or published release evidence. Tool versions are explicit;
+Go's module checksum database verifies source downloads. Dependabot proposes weekly
+action, npm, Go, and Docker updates; inline scanner versions require manual review.
+
+Action commits are pinned, checkout credentials are not persisted, and jobs receive
+only `contents: read`. No AWS, registry, deployment, or signing authority is granted.
+CODEOWNERS declares the current repository owner for critical paths; requiring its
+approval and `CI / required` in branch rules is an external repository setting.
+Hosted execution and branch protection are not established by local validation.
+
+The remaining sections describe the broader target. License/SAST policy, browser
+product E2E, IaC checks, scheduled rescans, artifact retention/publication, signatures,
+and promotion are not implemented by this M0 workflow. M14 adds release delivery.
 
 The pipeline enforces the [OpenAPI contract](../api/openapi.md),
 [Terraform operating model](../infrastructure/terraform.md), and the decisions to use

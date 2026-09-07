@@ -2,7 +2,7 @@
 
 ## Purpose And Status
 
-This documentation defines the proposed product, software, data, cloud, platform, delivery, security, reliability, and implementation architecture for ClouDesk. The repository currently contains no product implementation or infrastructure; see the [repository assessment](repository-assessment.md). Terms such as **production target**, **planned**, and **future evolution** are intentional.
+This documentation defines the proposed product, software, data, cloud, platform, delivery, security, reliability, and implementation architecture for ClouDesk. The repository now implements the M0 engineering foundation (Go/Next.js shells, local dependencies, migrations, containers, CI, and tests), while product features and production infrastructure remain planned; see the [repository assessment](repository-assessment.md). Terms such as **production target**, **planned**, and **future evolution** are intentional.
 
 ## Start Here
 

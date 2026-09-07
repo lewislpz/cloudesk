@@ -19,9 +19,9 @@ documentation, application artifacts, or Git repository. That historical observa
 explains why the architecture was treated as greenfield rather than inferred from
 code.
 
-The repository is now initialized on Git. M0 Tasks 1 through 7 have added the root
+The repository is now initialized on Git. M0 Tasks 1 through 10 have added the root
 contributor README, exact Go/Node/pnpm toolchain declarations, package manifests and
-lockfiles, strict frontend quality configuration, stable root commands, an
+lockfiles, strict frontend quality configuration, stable root commands, a
 safe local `.env.example`, the canonical OpenAPI 3.1 contract, and generated Go and
 TypeScript transport boundaries. The Go API and worker now have runnable composition
 roots, typed configuration, bounded lifecycle primitives, health behavior, domain
@@ -34,7 +34,10 @@ and disposable PostgreSQL migration/query tests without introducing product tabl
 Digest-pinned Compose services now provide persistent and ephemeral PostgreSQL plus
 a synthetic local OIDC provider. Multi-stage, allowlisted-context Dockerfiles produce
 a static scratch-based API image and standalone Next.js image with non-root runtime
-users and OCI metadata. This remains engineering foundation, not a product feature or
+users and OCI metadata. Read-only GitHub Actions CI now checks contracts, application
+and database tests, docs, secrets, dependencies, and runtime images. The foundation
+suite additionally verifies generated client error/cancellation/tenant contracts,
+secret-safe process failures, and production web shells over HTTP. This remains engineering foundation, not a product feature or
 deployed runtime.
 
 The following requested technologies and capabilities are therefore **not implemented**:
@@ -45,7 +48,7 @@ The following requested technologies and capabilities are therefore **not implem
   and product feature workflows.
 - Domain PostgreSQL schemas/repositories, Redis, object storage, messaging, and real
   worker polling/job execution.
-- AWS, Terraform, EKS/Kubernetes, Helm, Argo CD, or CI/CD.
+- AWS, Terraform, EKS/Kubernetes, Helm, Argo CD, or production CD.
 - Application authentication, tenant isolation, RBAC, domain behavior, telemetry,
   backups, or executable runbooks.
 

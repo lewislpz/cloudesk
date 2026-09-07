@@ -8,6 +8,15 @@ PostgreSQL, local OIDC, and required queue/object adapters. It does not replace
 [backend](backend.md), [frontend](frontend.md), or
 [integration](integration.md) coverage, and no browser suite exists yet.
 
+## Implemented M0 HTTP Smoke
+
+After `pnpm build`, `pnpm --dir frontend test:e2e` starts the production Next.js
+server on an ephemeral loopback port and checks `/`, `/onboarding`, and a workspace
+shell for successful HTML, a main landmark, product identity, and absence of a
+server-only configuration marker. It enforces startup/request/cleanup deadlines.
+This is HTTP process coverage, not browser interaction or authentication evidence.
+`make test-foundation` includes it; the Playwright journeys below start with M1.
+
 ## Environment And Fixtures
 
 Playwright uses an isolated migrated database and deterministic builders from the

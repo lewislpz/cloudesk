@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This is the proposed implementation sequence after the architecture is explicitly approved. It is not evidence that implementation has started. Detailed milestone acceptance and risks live in [milestones](milestones.md).
+This is the proposed implementation sequence after the architecture is explicitly approved. M0 now has a local implementation and verification suite; M1 and later milestones remain planned. Hosted CI success and branch-protection settings still require GitHub-side evidence. Detailed milestone acceptance and risks live in [milestones](milestones.md).
 
 ## Delivery Rules
 

@@ -5,7 +5,7 @@
   "description": "ClouDesk monorepo foundation",
   "packageManager": "pnpm@10.15.1",
   "engines": {
-    "node": ">=24.15.0 <25",
+    "node": ">=24.20.0 <25",
     "pnpm": "10.15.1"
   },
   "scripts": {

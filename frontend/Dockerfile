@@ -1,6 +1,10 @@
 ARG IMAGE_REVISION=unknown
 
-FROM node:24.15.0-alpine3.23@sha256:d1b3b4da11eefd5941e7f0b9cf17783fc99d9c6fc34884a665f40a06dbdfc94f AS dependencies
+FROM node:24.20.0-alpine3.24@sha256:e67514e5d0f6c46656005e1b693b2ec9d52e80b641307de684d4a015ba7a4eaf AS base
+
+RUN apk add --no-cache libcrypto3=3.5.8-r0 libssl3=3.5.8-r0
+
+FROM base AS dependencies
 
 ENV PNPM_HOME=/pnpm \
     PATH=/pnpm:$PATH \
@@ -26,10 +30,15 @@ COPY frontend ./frontend
 
 RUN pnpm --filter @clouddesk/web build
 
-FROM node:24.15.0-alpine3.23@sha256:d1b3b4da11eefd5941e7f0b9cf17783fc99d9c6fc34884a665f40a06dbdfc94f AS runtime
+FROM base AS runtime
 
 ARG IMAGE_REVISION=unknown
 ARG IMAGE_VERSION=0.0.0
+
+# The standalone server needs Node, not package installation tools.
+RUN rm -rf /usr/local/lib/node_modules /opt/yarn-* \
+    /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack \
+    /usr/local/bin/yarn /usr/local/bin/yarnpkg
 
 LABEL org.opencontainers.image.title="ClouDesk Web" \
       org.opencontainers.image.description="ClouDesk Next.js web application" \

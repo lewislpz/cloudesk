@@ -10,7 +10,9 @@ and `axe-core` for the implemented application-shell boundary.
 
 The M0 suite covers semantic shell rendering, shared async states, same-origin
 generated-client behavior, CSRF injection, tenant query keys, and browser-storage
-guards. `@testing-library/user-event` and MSW remain deferred until an implemented
+guards, generated SDK tenant paths, correlated error envelopes, and cancellation.
+The production HTTP smoke is described in [E2E coverage](e2e.md#implemented-m0-http-smoke).
+`@testing-library/user-event` and MSW remain deferred until an implemented
 interaction or networked feature needs those boundaries. Production build and strict
 type checks complement the component suite; the broader behaviors below remain
 mandatory as their owning features arrive.

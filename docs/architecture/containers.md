@@ -12,6 +12,20 @@ See the [system context](system-context.md) for actors and trust boundaries, the
 [architecture overview](overview.md) for internal modules, and
 [scalability and evolution](scalability.md) for scaling and extraction criteria.
 
+## Implemented Image Security
+
+The web build uses digest-pinned Node 24.20.0 on Alpine 3.24 and explicitly patched
+`libcrypto3`/`libssl3` 3.5.8-r0. The final runtime removes npm, Corepack, and Yarn;
+Next standalone assets run directly under Node. Source and installed package inputs
+remain pinned; if an exact Alpine package revision is retired, the build fails and
+requires a reviewed pin refresh rather than silently upgrading.
+
+CI generates CycloneDX inventories with Syft and scans them with Grype, blocking all
+high/critical findings. At the local 2026-09-07 verification, the API has no findings;
+the web image retains the scanner's medium BusyBox CVE-2025-60876 findings without
+an available fix. Recheck on base-image/scanner database updates. These are local
+scan results, not release certification or deployed-image evidence.
+
 ## Deployment Horizons
 
 | Horizon | Runtime shape |
